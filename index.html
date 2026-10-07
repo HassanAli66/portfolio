@@ -18,7 +18,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
-    <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js" defer></script>
 
     <style>
@@ -82,28 +81,28 @@
         /* ===== CUSTOM CURSOR ===== */
         .cursor-dot {
             position: fixed;
+            top: 0;
+            left: 0;
             width: 8px;
             height: 8px;
             background: #3B82F6;
             border-radius: 50%;
             pointer-events: none;
             z-index: 99999;
-            transform: translate(-50%, -50%);
-            transition: width 0.15s, height 0.15s, background 0.15s;
             will-change: transform;
-            mix-blend-mode: difference;
         }
         .cursor-ring {
             position: fixed;
+            top: 0;
+            left: 0;
             width: 40px;
             height: 40px;
             border: 1.5px solid rgba(255, 255, 255, 0.25);
             border-radius: 50%;
             pointer-events: none;
             z-index: 99998;
-            transform: translate(-50%, -50%);
-            transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease, background 0.3s ease;
             will-change: transform;
+            transition: width 0.25s ease, height 0.25s ease, border-color 0.25s ease, background 0.25s ease;
         }
         .cursor-ring.active {
             width: 64px;
@@ -116,7 +115,6 @@
             height: 80px;
             border-color: #06B6D4;
             background: rgba(6, 182, 212, 0.12);
-            transition: width 0.1s, height 0.1s;
         }
 
         @media (max-width: 768px) {
@@ -150,7 +148,7 @@
             font-size: 0.9rem;
             color: #94A3B8;
             padding: 2rem;
-            transition: opacity 0.8s ease, visibility 0.8s ease;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
         }
         #loader.hide {
             opacity: 0;
@@ -252,66 +250,67 @@
         .bg-aurora .blob {
             position: absolute;
             border-radius: 50%;
-            filter: blur(120px);
-            opacity: 0.12;
+            filter: blur(70px);
+            opacity: 0.10;
             will-change: transform;
         }
         .bg-aurora .blob:nth-child(1) {
-            width: 600px;
-            height: 600px;
-            top: -200px;
-            left: -200px;
-            background: #3B82F6;
-            animation: auroraFloat 20s ease-in-out infinite alternate;
-        }
-        .bg-aurora .blob:nth-child(2) {
             width: 500px;
             height: 500px;
-            bottom: -200px;
-            right: -200px;
+            top: -160px;
+            left: -160px;
+            background: #3B82F6;
+            animation: auroraFloat 22s ease-in-out infinite alternate;
+        }
+        .bg-aurora .blob:nth-child(2) {
+            width: 420px;
+            height: 420px;
+            bottom: -160px;
+            right: -160px;
             background: #8B5CF6;
-            animation: auroraFloat 25s ease-in-out infinite alternate-reverse;
+            animation: auroraFloat 28s ease-in-out infinite alternate-reverse;
         }
         .bg-aurora .blob:nth-child(3) {
-            width: 400px;
-            height: 400px;
+            width: 320px;
+            height: 320px;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
+            margin: -160px 0 0 -160px;
             background: #06B6D4;
-            animation: auroraFloat 30s ease-in-out infinite alternate;
-            opacity: 0.06;
+            animation: auroraFloat 34s ease-in-out infinite alternate;
+            opacity: 0.05;
         }
         @keyframes auroraFloat {
             0% {
-                transform: translate(0, 0) scale(1);
+                transform: translate3d(0, 0, 0) scale(1);
             }
-            33% {
-                transform: translate(60px, -40px) scale(1.05);
-            }
-            66% {
-                transform: translate(-30px, 60px) scale(0.95);
+            50% {
+                transform: translate3d(40px, -30px, 0) scale(1.04);
             }
             100% {
-                transform: translate(40px, 30px) scale(1.02);
+                transform: translate3d(30px, 24px, 0) scale(1.02);
             }
         }
         @media (max-width: 768px) {
+            .bg-aurora .blob {
+                filter: blur(50px);
+            }
             .bg-aurora .blob:nth-child(1) {
-                width: 300px;
-                height: 300px;
-                top: -100px;
-                left: -100px;
+                width: 260px;
+                height: 260px;
+                top: -90px;
+                left: -90px;
             }
             .bg-aurora .blob:nth-child(2) {
-                width: 250px;
-                height: 250px;
-                bottom: -100px;
-                right: -100px;
+                width: 220px;
+                height: 220px;
+                bottom: -90px;
+                right: -90px;
             }
             .bg-aurora .blob:nth-child(3) {
-                width: 200px;
-                height: 200px;
+                width: 180px;
+                height: 180px;
+                margin: -90px 0 0 -90px;
             }
         }
         .bg-noise {
@@ -323,30 +322,24 @@
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
             background-size: 256px 256px;
         }
+        /* Spotlight: small fixed element moved with transform (cheap) instead of
+           repainting a full-screen background-position every mousemove */
         .bg-spotlight {
             position: fixed;
-            inset: 0;
+            top: 0;
+            left: 0;
+            width: 900px;
+            height: 900px;
+            margin: -450px 0 0 -450px;
             z-index: 0;
             pointer-events: none;
-            background: radial-gradient(ellipse 600px 600px at 50% 50%, rgba(59, 130, 246, 0.04), transparent 70%);
-            transition: background-position 0.1s ease;
-            will-change: background-position;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.055), transparent 62%);
+            will-change: transform;
         }
         @media (max-width: 768px) {
             .bg-spotlight {
-                background: radial-gradient(ellipse 300px 300px at 50% 50%, rgba(59, 130, 246, 0.03), transparent 70%);
+                display: none;
             }
-        }
-
-        /* ===== LENIS ===== */
-        html.lenis {
-            height: auto;
-        }
-        .lenis.lenis-smooth {
-            scroll-behavior: auto;
-        }
-        .lenis.lenis-smooth [data-lenis-prevent] {
-            overscroll-behavior: contain;
         }
 
         /* ===== NAVBAR ===== */
@@ -357,11 +350,11 @@
             right: 0;
             z-index: 1000;
             padding: 0.6rem 1.2rem;
-            background: rgba(5, 8, 22, 0.7);
-            backdrop-filter: blur(20px) saturate(1.2);
-            -webkit-backdrop-filter: blur(20px) saturate(1.2);
+            background: rgba(5, 8, 22, 0.86);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), background 0.3s;
+            transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             will-change: transform;
         }
         .navbar.hidden {
@@ -411,7 +404,7 @@
             padding: 0.4rem 0.7rem;
             border-radius: 8px;
             color: #94A3B8;
-            transition: color 0.3s, background 0.3s;
+            transition: color 0.25s, background 0.25s;
             position: relative;
             letter-spacing: 0.01em;
             white-space: nowrap;
@@ -429,7 +422,7 @@
             height: 2px;
             background: #3B82F6;
             border-radius: 2px;
-            transition: width 0.3s ease, left 0.3s ease;
+            transition: width 0.25s ease, left 0.25s ease;
         }
         .navbar .nav-links li a:hover::after {
             width: 50%;
@@ -443,12 +436,11 @@
             border-radius: 20px;
             font-weight: 600;
             font-size: 0.7rem;
-            transition: background 0.3s, border-color 0.3s, transform 0.2s;
+            transition: background 0.25s, border-color 0.25s;
         }
         .navbar .nav-links li a.cv-btn:hover {
             background: rgba(59, 130, 246, 0.2);
             border-color: rgba(59, 130, 246, 0.4);
-            transform: scale(1.02);
         }
         .navbar .nav-links li a.cv-btn::after {
             display: none;
@@ -461,7 +453,7 @@
             border-radius: 20px;
             font-weight: 500;
             font-size: 0.7rem;
-            transition: background 0.3s, border-color 0.3s, transform 0.2s;
+            transition: background 0.25s, border-color 0.25s;
             display: inline-flex;
             align-items: center;
             gap: 0.3rem;
@@ -469,7 +461,6 @@
         .navbar .nav-links li a.term-btn:hover {
             background: rgba(6, 182, 212, 0.15);
             border-color: rgba(6, 182, 212, 0.25);
-            transform: scale(1.02);
         }
         .navbar .nav-links li a.term-btn::after {
             display: none;
@@ -498,7 +489,7 @@
             color: #94A3B8;
             background: rgba(139, 92, 246, 0.06);
             border: 1px solid rgba(139, 92, 246, 0.08);
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
         }
         .navbar .nav-links li a.matrix-btn:hover {
             color: #8B5CF6;
@@ -551,13 +542,11 @@
                 right: -100%;
                 width: 280px;
                 height: 100vh;
-                background: rgba(5, 8, 22, 0.96);
-                backdrop-filter: blur(30px);
-                -webkit-backdrop-filter: blur(30px);
+                background: rgba(5, 8, 22, 0.98);
                 flex-direction: column;
                 padding: 4.5rem 1.5rem 2rem;
                 gap: 0.3rem;
-                transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                transition: right 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
                 border-left: 1px solid rgba(255, 255, 255, 0.06);
                 align-items: stretch;
                 overflow-y: auto;
@@ -734,23 +723,10 @@
             border-radius: 30px;
             font-size: 0.8rem;
             font-weight: 500;
-            transition: all 0.3s ease;
+            transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
             border: 1px solid rgba(255, 255, 255, 0.06);
             background: rgba(255, 255, 255, 0.02);
             color: #F8FAFC;
-            position: relative;
-            overflow: hidden;
-        }
-        .hero .actions .btn::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(6, 182, 212, 0.04));
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-        .hero .actions .btn:hover::before {
-            opacity: 1;
         }
         .hero .actions .btn-primary {
             background: linear-gradient(135deg, #3B82F6, #06B6D4);
@@ -759,11 +735,7 @@
             box-shadow: 0 4px 24px rgba(59, 130, 246, 0.2);
         }
         .hero .actions .btn-primary:hover {
-            transform: translateY(-2px);
             box-shadow: 0 8px 40px rgba(59, 130, 246, 0.3);
-        }
-        .hero .actions .btn-primary::before {
-            display: none;
         }
         .hero .actions .btn-ghost {
             border-color: rgba(255, 255, 255, 0.08);
@@ -771,7 +743,6 @@
         .hero .actions .btn-ghost:hover {
             border-color: rgba(255, 255, 255, 0.2);
             background: rgba(255, 255, 255, 0.04);
-            transform: translateY(-2px);
         }
         .hero .actions .btn .icon {
             font-size: 0.8rem;
@@ -784,7 +755,6 @@
         .hero .actions .btn-terminal:hover {
             background: rgba(6, 182, 212, 0.12);
             border-color: rgba(6, 182, 212, 0.2);
-            transform: translateY(-2px);
         }
         .hero .actions .btn-matrix {
             background: rgba(139, 92, 246, 0.06);
@@ -794,7 +764,6 @@
         .hero .actions .btn-matrix:hover {
             background: rgba(139, 92, 246, 0.12);
             border-color: rgba(139, 92, 246, 0.2);
-            transform: translateY(-2px);
         }
 
         .hero .visual {
@@ -805,8 +774,6 @@
         }
         .hero .profile-card {
             background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 24px;
             padding: 2rem;
@@ -815,15 +782,6 @@
             box-shadow: 0 20px 80px rgba(0, 0, 0, 0.4);
             position: relative;
             overflow: hidden;
-        }
-        .hero .profile-card::before {
-            content: '';
-            position: absolute;
-            inset: -2px;
-            border-radius: 24px;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(6, 182, 212, 0.05), rgba(139, 92, 246, 0.1));
-            z-index: -1;
-            filter: blur(1px);
         }
         .hero .profile-card .avatar {
             width: 68px;
@@ -880,8 +838,6 @@
             border-radius: 50%;
             border: 1px solid rgba(255, 255, 255, 0.04);
             background: rgba(255, 255, 255, 0.01);
-            backdrop-filter: blur(4px);
-            animation: floatGeo 8s ease-in-out infinite;
             pointer-events: none;
         }
         .hero .floating-geo:nth-child(2) {
@@ -889,7 +845,6 @@
             height: 60px;
             top: -12px;
             right: -12px;
-            animation-delay: -2s;
             border-color: rgba(59, 130, 246, 0.1);
         }
         .hero .floating-geo:nth-child(3) {
@@ -897,17 +852,7 @@
             height: 40px;
             bottom: -8px;
             left: -8px;
-            animation-delay: -4s;
             border-color: rgba(6, 182, 212, 0.08);
-        }
-        @keyframes floatGeo {
-            0%,
-            100% {
-                transform: translate(0, 0) scale(1);
-            }
-            50% {
-                transform: translate(8px, -12px) scale(1.05);
-            }
         }
 
         .hero .scroll-indicator {
@@ -924,23 +869,11 @@
             letter-spacing: 0.1em;
             text-transform: uppercase;
             opacity: 0.5;
-            animation: scrollBounce 2.5s ease-in-out infinite;
         }
         .hero .scroll-indicator .line {
             width: 1px;
             height: 30px;
             background: linear-gradient(to bottom, #94A3B8, transparent);
-        }
-        @keyframes scrollBounce {
-            0%,
-            100% {
-                transform: translateX(-50%) translateY(0);
-                opacity: 0.5;
-            }
-            50% {
-                transform: translateX(-50%) translateY(5px);
-                opacity: 0.8;
-            }
         }
 
         /* ===== HERO RESPONSIVE ===== */
@@ -1061,22 +994,20 @@
             font-size: 0.55rem;
             font-family: 'JetBrains Mono', monospace;
             color: #64748B;
-            background: rgba(5, 8, 22, 0.7);
-            backdrop-filter: blur(10px);
+            background: rgba(5, 8, 22, 0.85);
             border: 1px solid rgba(255, 255, 255, 0.04);
             padding: 0.2rem 0.6rem;
             border-radius: 12px;
             display: inline-flex;
             align-items: center;
             gap: 0.3rem;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
             cursor: pointer;
             user-select: none;
         }
         .shortcuts-bar .shortcut-item:hover {
             color: #F8FAFC;
             border-color: rgba(255, 255, 255, 0.08);
-            background: rgba(5, 8, 22, 0.85);
         }
         .shortcuts-bar .shortcut-item kbd {
             background: rgba(255, 255, 255, 0.06);
@@ -1214,12 +1145,11 @@
             border-radius: 16px;
             padding: 1.2rem 0.8rem;
             text-align: center;
-            transition: all 0.3s ease;
+            transition: background 0.25s ease, border-color 0.25s ease;
         }
         #about .stat-card:hover {
             background: rgba(255, 255, 255, 0.05);
             border-color: rgba(59, 130, 246, 0.15);
-            transform: translateY(-2px);
         }
         #about .stat-card .number {
             font-family: 'Space Grotesk', sans-serif;
@@ -1277,33 +1207,20 @@
             border-radius: 14px;
             padding: 1rem 0.8rem;
             text-align: center;
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: border-color 0.25s ease, background 0.25s ease;
             position: relative;
             overflow: hidden;
         }
-        #skills .skill-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.06), transparent 70%);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-        #skills .skill-card:hover::before {
-            opacity: 1;
-        }
         #skills .skill-card:hover {
-            transform: translateY(-3px);
             border-color: rgba(59, 130, 246, 0.15);
             background: rgba(255, 255, 255, 0.05);
-            box-shadow: 0 8px 40px rgba(59, 130, 246, 0.04);
         }
         #skills .skill-card .icon {
             font-size: 1.3rem;
             margin-bottom: 0.3rem;
             display: block;
             color: #94A3B8;
-            transition: color 0.3s;
+            transition: color 0.25s;
         }
         #skills .skill-card:hover .icon {
             color: #F8FAFC;
@@ -1400,13 +1317,6 @@
             border-radius: 50%;
             background: #050816;
             border: 2px solid #3B82F6;
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.15);
-            transition: all 0.3s ease;
-        }
-        #experience .timeline-item:hover::before {
-            border-color: #06B6D4;
-            box-shadow: 0 0 30px rgba(6, 182, 212, 0.2);
-            transform: scale(1.1);
         }
         #experience .timeline-item .header {
             display: flex;
@@ -1457,10 +1367,6 @@
             color: #94A3B8;
             letter-spacing: 0.02em;
         }
-        #experience .timeline-item .tech-tags span:hover {
-            border-color: rgba(59, 130, 246, 0.2);
-            color: #F8FAFC;
-        }
 
         @media (max-width: 600px) {
             #experience .timeline {
@@ -1502,29 +1408,12 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 18px;
             padding: 1.5rem;
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: border-color 0.25s ease, background 0.25s ease;
             position: relative;
             overflow: hidden;
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-        }
-        #projects .project-card::before {
-            content: '';
-            position: absolute;
-            inset: -1px;
-            border-radius: 18px;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.04), rgba(6, 182, 212, 0.02), rgba(139, 92, 246, 0.03));
-            z-index: -1;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-        #projects .project-card:hover::before {
-            opacity: 1;
         }
         #projects .project-card:hover {
-            transform: translateY(-4px);
             border-color: rgba(59, 130, 246, 0.1);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             background: rgba(255, 255, 255, 0.035);
         }
         #projects .project-card .emoji {
@@ -1609,12 +1498,11 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 14px;
             padding: 1.3rem;
-            transition: all 0.3s ease;
+            transition: background 0.25s ease, border-color 0.25s ease;
         }
         #education .edu-card:hover {
             background: rgba(255, 255, 255, 0.04);
             border-color: rgba(255, 255, 255, 0.08);
-            transform: translateY(-2px);
         }
         #education .edu-card .e-title {
             font-family: 'Space Grotesk', sans-serif;
@@ -1655,7 +1543,7 @@
             border: 1px solid rgba(255, 255, 255, 0.04);
             border-radius: 10px;
             color: #94A3B8;
-            transition: all 0.3s ease;
+            transition: border-color 0.25s ease, color 0.25s ease;
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -1663,7 +1551,6 @@
         #education .certs .cert-item:hover {
             border-color: rgba(59, 130, 246, 0.12);
             color: #F8FAFC;
-            background: rgba(255, 255, 255, 0.03);
         }
         #education .certs .cert-item .ci {
             color: #3B82F6;
@@ -1724,12 +1611,11 @@
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255, 255, 255, 0.04);
             border-radius: 12px;
-            transition: all 0.3s ease;
+            transition: background 0.25s ease, border-color 0.25s ease;
         }
         #contact .contact-item:hover {
             background: rgba(255, 255, 255, 0.04);
             border-color: rgba(255, 255, 255, 0.08);
-            transform: translateX(3px);
         }
         #contact .contact-item .ci-icon {
             width: 32px;
@@ -1758,18 +1644,8 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 18px;
             padding: 1.8rem;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
             position: relative;
             overflow: hidden;
-        }
-        #contact .contact-card::before {
-            content: '';
-            position: absolute;
-            inset: -1px;
-            border-radius: 18px;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.04), rgba(6, 182, 212, 0.02));
-            z-index: -1;
         }
         #contact .contact-card .cc-title {
             font-family: 'Space Grotesk', sans-serif;
@@ -1794,7 +1670,7 @@
             background: rgba(255, 255, 255, 0.02);
             font-size: 0.75rem;
             color: #94A3B8;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
             display: inline-flex;
             align-items: center;
             gap: 0.4rem;
@@ -1803,7 +1679,6 @@
             border-color: rgba(59, 130, 246, 0.15);
             color: #F8FAFC;
             background: rgba(255, 255, 255, 0.04);
-            transform: translateY(-2px);
         }
         #contact .contact-card .social-row a .si {
             color: #3B82F6;
@@ -1886,7 +1761,7 @@
             flex-wrap: wrap;
         }
         footer .footer-links a {
-            transition: color 0.3s;
+            transition: color 0.25s;
         }
         footer .footer-links a:hover {
             color: #F8FAFC;
@@ -1912,9 +1787,7 @@
             position: fixed;
             inset: 0;
             z-index: 50000;
-            background: rgba(5, 8, 22, 0.92);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: rgba(5, 8, 22, 0.95);
             display: none;
             align-items: center;
             justify-content: center;
@@ -1974,7 +1847,7 @@
             margin-left: auto;
             font-size: 1.1rem;
             color: #64748B;
-            transition: color 0.3s;
+            transition: color 0.25s;
             background: none;
             border: none;
             cursor: pointer;
@@ -2004,17 +1877,11 @@
         #terminal-overlay .term-body .line .cmd {
             color: #F8FAFC;
         }
-        #terminal-overlay .term-body .line .output {
-            color: #CBD5E1;
-        }
         #terminal-overlay .term-body .line .error {
             color: #EF4444;
         }
         #terminal-overlay .term-body .line .success {
             color: #10B981;
-        }
-        #terminal-overlay .term-body .line .highlight {
-            color: #3B82F6;
         }
         #terminal-overlay .term-input-wrap {
             display: flex;
@@ -2098,11 +1965,9 @@
             position: fixed;
             top: 15%;
             left: 50%;
-            transform: translateX(-50%) scale(0.95);
+            transform: translateX(-50%) scale(0.96);
             z-index: 60000;
-            background: rgba(5, 8, 22, 0.92);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
+            background: rgba(5, 8, 22, 0.96);
             border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 18px;
             padding: 1.2rem;
@@ -2111,7 +1976,7 @@
             box-shadow: 0 40px 120px rgba(0, 0, 0, 0.6);
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: opacity 0.2s ease, transform 0.2s ease;
         }
         #cmd-palette.open {
             opacity: 1;
@@ -2128,7 +1993,7 @@
             font-family: 'Inter', sans-serif;
             font-size: 0.9rem;
             outline: none;
-            transition: border-color 0.3s;
+            transition: border-color 0.25s;
         }
         #cmd-palette .cp-input:focus {
             border-color: rgba(59, 130, 246, 0.2);
@@ -2146,7 +2011,7 @@
             border-radius: 8px;
             font-size: 0.8rem;
             color: #94A3B8;
-            transition: all 0.2s ease;
+            transition: background 0.15s ease, color 0.15s ease;
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -2187,12 +2052,10 @@
             position: fixed;
             inset: 0;
             z-index: 59999;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
+            background: rgba(0, 0, 0, 0.5);
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.25s ease;
         }
         #palette-overlay-bg.open {
             opacity: 1;
@@ -2270,12 +2133,6 @@
             .bg-aurora .blob {
                 animation: none !important;
             }
-            .hero .scroll-indicator {
-                animation: none !important;
-            }
-            .hero .floating-geo {
-                animation: none !important;
-            }
         }
 
         /* ===== MATRIX OVERLAY ===== */
@@ -2285,19 +2142,11 @@
             z-index: 99999;
             pointer-events: none;
             opacity: 0;
-            transition: opacity 0.8s ease;
+            transition: opacity 0.6s ease;
         }
         #matrix-canvas.active {
             opacity: 1;
             pointer-events: all;
-        }
-
-        /* ===== MISC ===== */
-        .glow-text {
-            text-shadow: 0 0 40px rgba(59, 130, 246, 0.05);
-        }
-        .border-glow {
-            box-shadow: 0 0 60px rgba(59, 130, 246, 0.02);
         }
 
         /* ===== KONAMI TOAST ===== */
@@ -2307,8 +2156,7 @@
             left: 50%;
             transform: translateX(-50%) translateY(20px);
             z-index: 99998;
-            background: rgba(5, 8, 22, 0.92);
-            backdrop-filter: blur(20px);
+            background: rgba(5, 8, 22, 0.95);
             border: 1px solid rgba(139, 92, 246, 0.2);
             border-radius: 14px;
             padding: 0.7rem 1.5rem;
@@ -2317,7 +2165,7 @@
             color: #8B5CF6;
             opacity: 0;
             pointer-events: none;
-            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
             text-align: center;
             max-width: 90%;
@@ -2885,14 +2733,14 @@
                     const done = idx === lines.length - 1;
                     addLine(lines[idx], done);
                     idx++;
-                    const delay = idx < lines.length ? 200 + Math.random() * 300 : 500;
+                    const delay = idx < lines.length ? 140 + Math.random() * 180 : 400;
                     setTimeout(nextLine, delay);
                 } else {
                     setTimeout(() => {
                         document.getElementById('loader').classList.add('hide');
                         document.body.style.overflow = '';
                         initApp();
-                    }, 600);
+                    }, 400);
                 }
             }
             document.body.style.overflow = 'hidden';
@@ -2914,95 +2762,80 @@
                     strings: ['Senior Software Engineer', 'Backend Engineer', 'Python Developer',
                         'AI Agent Integrations', 'Full-Stack Engineer', 'SaaS Architect'
                     ],
-                    typeSpeed: 60,
-                    backSpeed: 30,
+                    typeSpeed: 55,
+                    backSpeed: 28,
                     loop: true,
                     backDelay: 1800,
-                    startDelay: 400,
+                    startDelay: 300,
                     cursorChar: '▌',
                 });
             }
 
-            if (typeof Lenis !== 'undefined' && window.innerWidth > 768) {
-                const lenis = new Lenis({
-                    duration: 1.2,
-                    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-                    orientation: 'vertical',
-                    smoothWheel: true,
-                });
-                window.lenis = lenis;
-
-                function raf(time) {
-                    lenis.raf(time);
-                    requestAnimationFrame(raf);
-                }
-                requestAnimationFrame(raf);
-            }
+            // NOTE: Lenis removed — native scrolling is instant and snappy.
 
             if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
                 gsap.registerPlugin(ScrollTrigger);
+
+                // Section-level reveals only (cheap)
                 gsap.utils.toArray('[data-section]').forEach((section) => {
                     gsap.from(section, {
                         scrollTrigger: {
                             trigger: section,
-                            start: 'top 88%',
-                            toggleActions: 'play none none reverse',
+                            start: 'top 90%',
+                            toggleActions: 'play none none none',
                         },
                         opacity: 0,
-                        y: 40,
-                        duration: 0.7,
-                        ease: 'power3.out',
+                        y: 30,
+                        duration: 0.55,
+                        ease: 'power2.out',
                         clearProps: 'opacity,y',
                     });
                 });
-                gsap.utils.toArray('#timeline .timeline-item').forEach((item, i) => {
-                    gsap.from(item, {
+
+                // Timeline as a single block instead of per-item
+                const timeline = document.querySelector('#timeline');
+                if (timeline) {
+                    gsap.from(timeline.children, {
                         scrollTrigger: {
-                            trigger: item,
-                            start: 'top 92%',
-                            toggleActions: 'play none none reverse',
+                            trigger: timeline,
+                            start: 'top 88%',
+                            toggleActions: 'play none none none',
                         },
                         opacity: 0,
-                        x: -24,
-                        duration: 0.5,
-                        delay: i * 0.06,
-                        ease: 'power3.out',
-                        clearProps: 'opacity,x',
-                    });
-                });
-                gsap.utils.toArray('#skills .skill-card').forEach((card, i) => {
-                    gsap.from(card, {
-                        scrollTrigger: {
-                            trigger: card,
-                            start: 'top 94%',
-                            toggleActions: 'play none none reverse',
-                        },
-                        opacity: 0,
-                        scale: 0.94,
-                        duration: 0.35,
-                        delay: i * 0.025,
+                        y: 20,
+                        duration: 0.45,
+                        stagger: 0.06,
                         ease: 'power2.out',
-                        clearProps: 'opacity,scale',
+                        clearProps: 'opacity,y',
                     });
-                });
-                gsap.utils.toArray('#projects .project-card').forEach((card, i) => {
-                    gsap.from(card, {
-                        scrollTrigger: {
-                            trigger: card,
-                            start: 'top 94%',
-                            toggleActions: 'play none none reverse',
-                        },
+                }
+
+                // Skills + projects grids as single blocks
+                const skillsGrid = document.querySelector('#skillsGrid');
+                if (skillsGrid) {
+                    gsap.from(skillsGrid, {
+                        scrollTrigger: { trigger: skillsGrid, start: 'top 90%' },
                         opacity: 0,
                         y: 24,
-                        duration: 0.45,
-                        delay: i * 0.05,
-                        ease: 'power3.out',
+                        duration: 0.5,
+                        ease: 'power2.out',
                         clearProps: 'opacity,y',
                     });
-                });
+                }
+                const projectsGrid = document.querySelector('#projectsGrid');
+                if (projectsGrid) {
+                    gsap.from(projectsGrid, {
+                        scrollTrigger: { trigger: projectsGrid, start: 'top 90%' },
+                        opacity: 0,
+                        y: 24,
+                        duration: 0.5,
+                        ease: 'power2.out',
+                        clearProps: 'opacity,y',
+                    });
+                }
             }
 
-            // Navbar hide/show
+            // Navbar hide/show — rAF-throttled
             let lastScroll = 0;
             const navbar = document.getElementById('navbar');
             let ticking = false;
@@ -3010,12 +2843,8 @@
                 if (!ticking) {
                     window.requestAnimationFrame(() => {
                         const current = window.pageYOffset || document.documentElement.scrollTop;
-                        if (current > 60) {
-                            if (current > lastScroll && current > 100) {
-                                navbar.classList.add('hidden');
-                            } else {
-                                navbar.classList.remove('hidden');
-                            }
+                        if (current > 100 && current > lastScroll) {
+                            navbar.classList.add('hidden');
                         } else {
                             navbar.classList.remove('hidden');
                         }
@@ -3024,15 +2853,25 @@
                     });
                     ticking = true;
                 }
-            });
+            }, { passive: true });
 
-            // Spotlight
+            // Spotlight — transform-based, rAF throttled
+            const spotlight = document.getElementById('spotlight');
+            let spotX = window.innerWidth / 2,
+                spotY = window.innerHeight / 2;
+            let spotQueued = false;
             document.addEventListener('mousemove', (e) => {
-                const spotlight = document.getElementById('spotlight');
-                if (spotlight) {
-                    spotlight.style.backgroundPosition = `${e.clientX}px ${e.clientY}px`;
+                if (!spotlight) return;
+                spotX = e.clientX;
+                spotY = e.clientY;
+                if (!spotQueued) {
+                    spotQueued = true;
+                    requestAnimationFrame(() => {
+                        spotlight.style.transform = `translate3d(${spotX}px, ${spotY}px, 0)`;
+                        spotQueued = false;
+                    });
                 }
-            });
+            }, { passive: true });
 
             // Menu toggle
             const menuToggle = document.getElementById('menuToggle');
@@ -3059,10 +2898,7 @@
             });
 
             // Terminal triggers
-            const termTriggers = [
-                'navTermBtn', 'heroTermBtn', 'footerTermBtn', 'shortcutTerminal'
-            ];
-            termTriggers.forEach(id => {
+            ['navTermBtn', 'heroTermBtn', 'footerTermBtn', 'shortcutTerminal'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) {
                     el.addEventListener('click', (e) => {
@@ -3073,10 +2909,7 @@
             });
 
             // Matrix triggers
-            const matrixTriggers = [
-                'navMatrixBtn', 'heroMatrixBtn', 'footerMatrixBtn', 'shortcutMatrix'
-            ];
-            matrixTriggers.forEach(id => {
+            ['navMatrixBtn', 'heroMatrixBtn', 'footerMatrixBtn', 'shortcutMatrix'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) {
                     el.addEventListener('click', (e) => {
@@ -3100,23 +2933,17 @@
 
             // Keyboard shortcuts
             document.addEventListener('keydown', (e) => {
-                // T for terminal
-                if ((e.key === 't' || e.key === 'T') && !e.ctrlKey && !e.metaKey && !e.shiftKey && !e.altKey) {
-                    const tag = document.activeElement?.tagName || '';
-                    if (tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT') {
-                        e.preventDefault();
-                        toggleTerminal();
-                    }
+                const tag = document.activeElement?.tagName || '';
+                const typing = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
+
+                if ((e.key === 't' || e.key === 'T') && !e.ctrlKey && !e.metaKey && !e.shiftKey && !e.altKey && !typing) {
+                    e.preventDefault();
+                    toggleTerminal();
                 }
-                // M for matrix
-                if ((e.key === 'm' || e.key === 'M') && !e.ctrlKey && !e.metaKey && !e.shiftKey && !e.altKey) {
-                    const tag = document.activeElement?.tagName || '';
-                    if (tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT') {
-                        e.preventDefault();
-                        toggleMatrix();
-                    }
+                if ((e.key === 'm' || e.key === 'M') && !e.ctrlKey && !e.metaKey && !e.shiftKey && !e.altKey && !typing) {
+                    e.preventDefault();
+                    toggleMatrix();
                 }
-                // Ctrl+K or Cmd+K for palette
                 if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
                     e.preventDefault();
                     const palette = document.getElementById('cmd-palette');
@@ -3168,6 +2995,7 @@
                 'Algorithms': 'fas fa-code-branch',
                 'English / Arabic': 'fas fa-language',
             };
+            const frag = document.createDocumentFragment();
             DATA.skills.forEach(s => {
                 const card = document.createElement('div');
                 card.className = 'skill-card';
@@ -3177,12 +3005,14 @@
                     <div class="name">${s.name}</div>
                     <div class="cats">${s.cats.map(c => `<span>${c}</span>`).join('')}</div>
                 `;
-                grid.appendChild(card);
+                frag.appendChild(card);
             });
+            grid.appendChild(frag);
         }
 
         function buildExperience() {
             const timeline = document.getElementById('timeline');
+            const frag = document.createDocumentFragment();
             DATA.experience.forEach(exp => {
                 const item = document.createElement('div');
                 item.className = 'timeline-item';
@@ -3195,12 +3025,14 @@
                     <div class="desc">${exp.desc}</div>
                     <div class="tech-tags">${exp.tags.map(t => `<span>${t}</span>`).join('')}</div>
                 `;
-                timeline.appendChild(item);
+                frag.appendChild(item);
             });
+            timeline.appendChild(frag);
         }
 
         function buildProjects() {
             const grid = document.getElementById('projectsGrid');
+            const frag = document.createDocumentFragment();
             DATA.projects.forEach(p => {
                 const card = document.createElement('div');
                 card.className = 'project-card';
@@ -3210,12 +3042,14 @@
                     <div class="p-desc">${p.desc}</div>
                     <div class="p-tags">${p.tags.map(t => `<span>${t}</span>`).join('')}</div>
                 `;
-                grid.appendChild(card);
+                frag.appendChild(card);
             });
+            grid.appendChild(frag);
         }
 
         function buildEducation() {
             const grid = document.getElementById('eduGrid');
+            const frag = document.createDocumentFragment();
             DATA.education.forEach(e => {
                 const card = document.createElement('div');
                 card.className = 'edu-card';
@@ -3225,18 +3059,21 @@
                     <div class="e-date">${e.date}</div>
                     <div class="e-desc">${e.desc}</div>
                 `;
-                grid.appendChild(card);
+                frag.appendChild(card);
             });
+            grid.appendChild(frag);
         }
 
         function buildCertifications() {
             const grid = document.getElementById('certGrid');
+            const frag = document.createDocumentFragment();
             DATA.certifications.forEach(c => {
                 const item = document.createElement('div');
                 item.className = 'cert-item';
                 item.innerHTML = `<span class="ci"><i class="fas fa-check-circle"></i></span> ${c}`;
-                grid.appendChild(item);
+                frag.appendChild(item);
             });
+            grid.appendChild(frag);
         }
 
         // ============================================================
@@ -3353,74 +3190,92 @@
         }
 
         // ============================================================
-        // CUSTOM CURSOR
+        // CUSTOM CURSOR (single rAF loop, transform-only)
         // ============================================================
         function setupCursor() {
             if (window.matchMedia('(max-width: 768px)').matches) return;
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
             const dot = document.getElementById('cursorDot');
             const ring = document.getElementById('cursorRing');
-            let mouseX = 0,
-                mouseY = 0;
-            let ringX = 0,
-                ringY = 0;
+            let mouseX = window.innerWidth / 2,
+                mouseY = window.innerHeight / 2;
+            let ringX = mouseX,
+                ringY = mouseY;
+            let running = true;
 
             document.addEventListener('mousemove', (e) => {
                 mouseX = e.clientX;
                 mouseY = e.clientY;
-                dot.style.transform = `translate(${mouseX - 4}px, ${mouseY - 4}px)`;
+            }, { passive: true });
+
+            function loop() {
+                if (!running) return;
+                // Dot follows instantly
+                dot.style.transform = `translate3d(${mouseX - 4}px, ${mouseY - 4}px, 0)`;
+                // Ring lerps
+                ringX += (mouseX - ringX) * 0.18;
+                ringY += (mouseY - ringY) * 0.18;
+                ring.style.transform = `translate3d(${ringX - 20}px, ${ringY - 20}px, 0)`;
+                requestAnimationFrame(loop);
+            }
+            loop();
+
+            document.addEventListener('visibilitychange', () => {
+                running = !document.hidden;
+                if (running) loop();
             });
 
-            function lerpRing() {
-                ringX += (mouseX - ringX) * 0.12;
-                ringY += (mouseY - ringY) * 0.12;
-                ring.style.transform = `translate(${ringX - 20}px, ${ringY - 20}px)`;
-                requestAnimationFrame(lerpRing);
-            }
-            ringX = mouseX;
-            ringY = mouseY;
-            lerpRing();
-
-            const hoverTargets = document.querySelectorAll('a, button, .btn, .skill-card, .project-card, .stat-card, .contact-item, .edu-card, .cert-item');
+            const hoverTargets = document.querySelectorAll(
+                'a, button, .btn, .skill-card, .project-card, .stat-card, .contact-item, .edu-card, .cert-item'
+            );
             hoverTargets.forEach(el => {
                 el.addEventListener('mouseenter', () => ring.classList.add('active'));
                 el.addEventListener('mouseleave', () => ring.classList.remove('active'));
                 el.addEventListener('mousedown', () => {
                     ring.classList.add('click');
-                    setTimeout(() => ring.classList.remove('click'), 200);
+                    setTimeout(() => ring.classList.remove('click'), 180);
                 });
             });
         }
 
         // ============================================================
-        // BACKGROUND PARTICLES
+        // BACKGROUND PARTICLES (DPR capped, throttled, fewer nodes)
         // ============================================================
         function setupBackground() {
             const canvas = document.getElementById('bg-canvas');
-            const ctx = canvas.getContext('2d');
+            const ctx = canvas.getContext('2d', { alpha: true });
             let w, h;
             const particles = [];
-            let count = 50;
-            let animId;
+            let count = 30;
+            let animId = null;
+            let running = true;
+            let lastFrame = 0;
+            const FRAME_INTERVAL = 1000 / 40; // cap ~40fps
+
+            // Disable entirely on low-power / reduced motion
+            const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (reduced) {
+                canvas.style.display = 'none';
+                return;
+            }
 
             function resize() {
+                // DPR capped at 1 — huge win, canvas is decorative
                 w = canvas.width = window.innerWidth;
                 h = canvas.height = window.innerHeight;
-                count = Math.min(60, Math.max(25, Math.floor((w * h) / 20000)));
+                count = Math.min(34, Math.max(14, Math.floor((w * h) / 42000)));
                 while (particles.length > count) particles.pop();
-                while (particles.length < count) {
-                    particles.push(new Particle());
-                }
+                while (particles.length < count) particles.push(new Particle());
             }
-            resize();
-            window.addEventListener('resize', resize);
 
             class Particle {
                 constructor() {
                     this.x = Math.random() * w;
                     this.y = Math.random() * h;
-                    this.r = Math.random() * 1.5 + 0.5;
-                    this.dx = (Math.random() - 0.5) * 0.3;
-                    this.dy = (Math.random() - 0.5) * 0.3;
+                    this.r = Math.random() * 1.4 + 0.5;
+                    this.dx = (Math.random() - 0.5) * 0.28;
+                    this.dy = (Math.random() - 0.5) * 0.28;
                     this.opacity = Math.random() * 0.4 + 0.1;
                 }
                 update() {
@@ -3437,40 +3292,47 @@
                 }
             }
 
-            for (let i = 0; i < count; i++) {
-                particles.push(new Particle());
-            }
+            resize();
+            window.addEventListener('resize', resize);
 
-            function animate() {
+            function animate(now) {
+                animId = requestAnimationFrame(animate);
+                if (!running) return;
+                if (now - lastFrame < FRAME_INTERVAL) return;
+                lastFrame = now;
+
                 ctx.clearRect(0, 0, w, h);
-                particles.forEach(p => {
-                    p.update();
-                    p.draw();
-                });
-                const maxDist = Math.min(150, (w + h) / 10);
+
                 for (let i = 0; i < particles.length; i++) {
+                    particles[i].update();
+                    particles[i].draw();
+                }
+
+                const maxDist = 120;
+                const maxDistSq = maxDist * maxDist;
+                for (let i = 0; i < particles.length; i++) {
+                    const a = particles[i];
                     for (let j = i + 1; j < particles.length; j++) {
-                        const dx = particles[i].x - particles[j].x;
-                        const dy = particles[i].y - particles[j].y;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-                        if (dist < maxDist) {
+                        const b = particles[j];
+                        const dx = a.x - b.x;
+                        const dy = a.y - b.y;
+                        const distSq = dx * dx + dy * dy;
+                        if (distSq < maxDistSq) {
                             ctx.beginPath();
-                            ctx.moveTo(particles[i].x, particles[i].y);
-                            ctx.lineTo(particles[j].x, particles[j].y);
-                            ctx.strokeStyle = `rgba(255,255,255,${0.025 * (1 - dist / maxDist)})`;
+                            ctx.moveTo(a.x, a.y);
+                            ctx.lineTo(b.x, b.y);
+                            ctx.strokeStyle = `rgba(255,255,255,${0.025 * (1 - distSq / maxDistSq)})`;
                             ctx.lineWidth = 0.5;
                             ctx.stroke();
                         }
                     }
                 }
-                animId = requestAnimationFrame(animate);
             }
-            animate();
 
-            window.addEventListener('resize', () => {
-                if (animId) cancelAnimationFrame(animId);
-                resize();
-                animate();
+            animId = requestAnimationFrame(animate);
+
+            document.addEventListener('visibilitychange', () => {
+                running = !document.hidden;
             });
         }
 
@@ -3497,8 +3359,7 @@
             }
 
             function handleCommand(cmd) {
-                const parts = cmd.trim().split(' ');
-                const main = parts[0].toLowerCase();
+                const main = cmd.trim().split(' ')[0].toLowerCase();
                 let output = '';
 
                 switch (main) {
@@ -3573,15 +3434,13 @@
                 if (e.key === 'Enter') {
                     e.preventDefault();
                     processInput();
-                }
-                if (e.key === 'ArrowUp') {
+                } else if (e.key === 'ArrowUp') {
                     e.preventDefault();
                     if (histIdx > 0) {
                         histIdx--;
                         input.value = history[histIdx] || '';
                     }
-                }
-                if (e.key === 'ArrowDown') {
+                } else if (e.key === 'ArrowDown') {
                     e.preventDefault();
                     if (histIdx < history.length - 1) {
                         histIdx++;
@@ -3590,15 +3449,12 @@
                         histIdx = history.length;
                         input.value = '';
                     }
-                }
-                if (e.key === 'Escape') {
+                } else if (e.key === 'Escape') {
                     toggleTerminal();
                 }
             });
 
             closeBtn.addEventListener('click', toggleTerminal);
-
-            window._terminalToggle = toggleTerminal;
         }
 
         function toggleTerminal() {
@@ -3612,11 +3468,10 @@
                 terminalOpen = false;
             } else {
                 overlay.style.display = 'flex';
-                void overlay.offsetWidth;
                 overlay.classList.add('open');
                 document.body.style.overflow = 'hidden';
                 terminalOpen = true;
-                setTimeout(() => input.focus(), 100);
+                setTimeout(() => input.focus(), 80);
             }
         }
 
@@ -3626,10 +3481,11 @@
         let matrixActive = false;
         let matrixAnimId = null;
         let matrixDrops = [];
-        let matrixCols = 0;
         let matrixCtx = null;
         let matrixW = 0,
             matrixH = 0;
+        let matrixLastFrame = 0;
+        const MATRIX_INTERVAL = 1000 / 24; // ~24fps is plenty for rain
 
         function setupMatrix() {
             const canvas = document.getElementById('matrix-canvas');
@@ -3638,36 +3494,35 @@
             function resize() {
                 matrixW = canvas.width = window.innerWidth;
                 matrixH = canvas.height = window.innerHeight;
-                matrixCols = Math.floor(matrixW / 14);
                 if (matrixActive) {
-                    matrixDrops = [];
-                    for (let i = 0; i < matrixCols; i++) {
-                        matrixDrops[i] = Math.random() * -matrixH / 14;
-                    }
+                    const cols = Math.floor(matrixW / 16);
+                    matrixDrops = new Array(cols)
+                        .fill(0)
+                        .map(() => Math.random() * -matrixH / 16);
                 }
             }
             window.addEventListener('resize', resize);
             resize();
 
-            function drawMatrix() {
-                if (!matrixActive || !matrixCtx) {
-                    if (matrixCtx) matrixCtx.clearRect(0, 0, matrixW, matrixH);
-                    return;
-                }
-                matrixCtx.fillStyle = 'rgba(5,8,22,0.05)';
+            function drawMatrix(now) {
+                if (!matrixActive) return;
+                matrixAnimId = requestAnimationFrame(drawMatrix);
+                if (now - matrixLastFrame < MATRIX_INTERVAL) return;
+                matrixLastFrame = now;
+
+                matrixCtx.fillStyle = 'rgba(5,8,22,0.06)';
                 matrixCtx.fillRect(0, 0, matrixW, matrixH);
                 matrixCtx.font = '14px monospace';
                 const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()';
                 for (let i = 0; i < matrixDrops.length; i++) {
-                    const text = chars[Math.floor(Math.random() * chars.length)];
+                    const text = chars[(Math.random() * chars.length) | 0];
                     matrixCtx.fillStyle = Math.random() > 0.9 ? '#3B82F6' : '#06B6D4';
-                    matrixCtx.fillText(text, i * 14, matrixDrops[i] * 14);
-                    if (matrixDrops[i] * 14 > matrixH && Math.random() > 0.975) {
+                    matrixCtx.fillText(text, i * 16, matrixDrops[i] * 16);
+                    if (matrixDrops[i] * 16 > matrixH && Math.random() > 0.975) {
                         matrixDrops[i] = 0;
                     }
                     matrixDrops[i]++;
                 }
-                matrixAnimId = requestAnimationFrame(drawMatrix);
             }
 
             window._matrixDraw = drawMatrix;
@@ -3679,24 +3534,21 @@
             matrixActive = !matrixActive;
             if (matrixActive) {
                 canvas.classList.add('active');
-                const w = canvas.width,
-                    h = canvas.height;
-                matrixCols = Math.floor(w / 14);
-                matrixDrops = [];
-                for (let i = 0; i < matrixCols; i++) {
-                    matrixDrops[i] = Math.random() * -h / 14;
-                }
+                const cols = Math.floor(canvas.width / 16);
+                matrixDrops = new Array(cols)
+                    .fill(0)
+                    .map(() => Math.random() * -canvas.height / 16);
                 if (matrixAnimId) cancelAnimationFrame(matrixAnimId);
-                window._matrixDraw();
+                matrixAnimId = requestAnimationFrame(window._matrixDraw);
                 document.getElementById('shortcutMatrix').classList.add('matrix-active');
             } else {
                 canvas.classList.remove('active');
                 if (matrixAnimId) cancelAnimationFrame(matrixAnimId);
-                const ctx = canvas.getContext('2d');
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                matrixAnimId = null;
+                matrixCtx.clearRect(0, 0, canvas.width, canvas.height);
                 document.getElementById('shortcutMatrix').classList.remove('matrix-active');
             }
-            // Update matrix button text
+
             document.querySelectorAll('.btn-matrix, .matrix-btn').forEach(el => {
                 if (matrixActive) {
                     if (el.tagName === 'BUTTON') {
@@ -3739,56 +3591,44 @@
             let filtered = sections;
 
             function render(items) {
-                results.innerHTML = '';
+                const frag = document.createDocumentFragment();
                 items.forEach((item, i) => {
                     const div = document.createElement('div');
                     div.className = `cp-item${i === activeIdx ? ' active' : ''}`;
                     div.innerHTML =
                         `<span class="cp-icon"><i class="fas ${item.icon}"></i></span> ${item.name}`;
-                    div.dataset.id = item.id;
-                    div.dataset.index = i;
                     div.addEventListener('click', () => selectItem(item));
                     div.addEventListener('mouseenter', () => {
                         activeIdx = i;
                         render(filtered);
                     });
-                    results.appendChild(div);
+                    frag.appendChild(div);
                 });
+                results.innerHTML = '';
                 if (items.length === 0) {
                     const div = document.createElement('div');
                     div.className = 'cp-item';
                     div.style.color = '#64748B';
                     div.textContent = 'No results found';
                     results.appendChild(div);
+                } else {
+                    results.appendChild(frag);
                 }
             }
 
             function selectItem(item) {
                 closePalette();
-                if (item.id === 'terminal') {
-                    toggleTerminal();
-                    return;
-                }
-                if (item.id === 'matrix') {
-                    toggleMatrix();
-                    return;
-                }
+                if (item.id === 'terminal') { toggleTerminal(); return; }
+                if (item.id === 'matrix') { toggleMatrix(); return; }
                 const el = document.getElementById(item.id);
-                if (el) {
-                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
 
             function filterItems(query) {
                 const q = query.toLowerCase().trim();
-                if (!q) {
-                    filtered = sections;
-                } else {
-                    filtered = sections.filter(s =>
-                        s.name.toLowerCase().includes(q) ||
-                        s.id.toLowerCase().includes(q)
-                    );
-                }
+                filtered = !q ? sections : sections.filter(s =>
+                    s.name.toLowerCase().includes(q) || s.id.toLowerCase().includes(q)
+                );
                 activeIdx = filtered.length > 0 ? 0 : -1;
                 render(filtered);
             }
@@ -3800,8 +3640,8 @@
                 filtered = sections;
                 activeIdx = 0;
                 render(filtered);
-                setTimeout(() => input.focus(), 50);
                 input.value = '';
+                setTimeout(() => input.focus(), 50);
             }
 
             function closePalette() {
@@ -3817,31 +3657,20 @@
                 if (e.key === 'Escape') {
                     e.preventDefault();
                     closePalette();
-                    return;
-                }
-                if (e.key === 'Enter') {
+                } else if (e.key === 'Enter') {
                     e.preventDefault();
-                    if (activeIdx >= 0 && activeIdx < filtered.length) {
-                        selectItem(filtered[activeIdx]);
-                    }
-                    return;
-                }
-                if (e.key === 'ArrowDown') {
+                    if (activeIdx >= 0 && activeIdx < filtered.length) selectItem(filtered[activeIdx]);
+                } else if (e.key === 'ArrowDown') {
                     e.preventDefault();
                     if (filtered.length > 0) {
                         activeIdx = (activeIdx + 1) % filtered.length;
                         render(filtered);
-                        const items = results.querySelectorAll('.cp-item');
-                        if (items[activeIdx]) items[activeIdx].scrollIntoView({ block: 'nearest' });
                     }
-                }
-                if (e.key === 'ArrowUp') {
+                } else if (e.key === 'ArrowUp') {
                     e.preventDefault();
                     if (filtered.length > 0) {
                         activeIdx = (activeIdx - 1 + filtered.length) % filtered.length;
                         render(filtered);
-                        const items = results.querySelectorAll('.cp-item');
-                        if (items[activeIdx]) items[activeIdx].scrollIntoView({ block: 'nearest' });
                     }
                 }
             });
@@ -3875,14 +3704,14 @@
                 }
             });
 
-            const konami = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft',
-                'ArrowRight', 'b', 'a'
+            const konami = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight',
+                'ArrowLeft', 'ArrowRight', 'b', 'a'
             ];
             let konamiIdx = 0;
             document.addEventListener('keydown', (e) => {
                 const key = e.key;
-                if (key === konami[konamiIdx] || (key === 'b' && konami[konamiIdx] === 'b') || (key === 'a' &&
-                        konami[konamiIdx] === 'a')) {
+                if (key === konami[konamiIdx] || (key === 'b' && konami[konamiIdx] === 'b') ||
+                    (key === 'a' && konami[konamiIdx] === 'a')) {
                     konamiIdx++;
                     if (konamiIdx === konami.length) {
                         konamiIdx = 0;
@@ -3896,16 +3725,7 @@
 
         function triggerKonami() {
             showToast('🎮 KONAMI CODE!', 'Matrix mode activated — enjoy the show!');
-            if (!matrixActive) {
-                toggleMatrix();
-            } else {
-                const canvas = document.getElementById('matrix-canvas');
-                canvas.style.transition = 'opacity 0.1s';
-                canvas.style.opacity = '0.3';
-                setTimeout(() => { canvas.style.opacity = '1'; }, 200);
-                setTimeout(() => { canvas.style.opacity = '0.5'; }, 400);
-                setTimeout(() => { canvas.style.opacity = '1'; }, 600);
-            }
+            if (!matrixActive) toggleMatrix();
         }
 
         function showToast(title, sub = '') {
@@ -3913,24 +3733,8 @@
             toast.innerHTML = `${title}<br><span class="sub">${sub}</span>`;
             toast.classList.add('show');
             clearTimeout(toast._timer);
-            toast._timer = setTimeout(() => {
-                toast.classList.remove('show');
-            }, 4000);
+            toast._timer = setTimeout(() => toast.classList.remove('show'), 3500);
         }
-
-        // ============================================================
-        // HANDLE RESIZE
-        // ============================================================
-        window.addEventListener('resize', () => {
-            const canvas = document.getElementById('bg-canvas');
-            if (canvas) {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            }
-            if (typeof window._matrixResize === 'function') {
-                window._matrixResize();
-            }
-        });
 
         console.log('⚡ Hassan Ali — Senior Software Engineer Portfolio v2.0');
         console.log('🎮 Shortcuts: [T]erminal  [M]atrix  [⌘K] Palette  [↑↑↓↓←→←→BA] Konami');
