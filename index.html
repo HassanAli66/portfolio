@@ -1,79 +1,3940 @@
-#!/usr/bin/env python3
-"""Usage: python update_portfolio.py index.html
-Writes index.updated.html with the Rozavio / Ameritalia changes applied."""
-import re, sys
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <title>Hassan Ali — Senior Software Engineer</title>
+    <meta name="description" content="Senior Software Engineer building, scaling and maintaining web APIs and full-stack applications in Python, Django, and Flask, with AI agent integration." />
+    <meta property="og:title" content="Hassan Ali — Senior Software Engineer" />
+    <meta property="og:description" content="Senior Software Engineer specializing in Python, Django, Flask, multi-tenant SaaS, AI agents, and full-stack development." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Hassan Ali — Senior Software Engineer" />
+    <meta name="twitter:description" content="Senior Software Engineer specializing in Python, Django, Flask, multi-tenant SaaS, AI agents, and full-stack development." />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
 
-src = sys.argv[1] if len(sys.argv) > 1 else "index.html"
-out = src.rsplit(".", 1)[0] + ".updated.html"
-s = open(src, encoding="utf-8").read()
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+    <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js" defer></script>
 
-def rep(old, new, label, count=0):
-    global s
-    n = s.count(old)
-    if n == 0:
-        print(f"[!] not found: {label}")
-        return
-    s = s.replace(old, new) if count == 0 else s.replace(old, new, count)
-    print(f"[ok] {label} ({n})")
+    <style>
+        /* ===== RESET & BASE ===== */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+            cursor: none;
+        }
+        body {
+            background: #050816;
+            color: #F8FAFC;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            cursor: none;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        ::selection {
+            background: rgba(59, 130, 246, 0.3);
+            color: #F8FAFC;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0B1120;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3B82F6;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #06B6D4;
+        }
 
-def rx(pattern, new, label):
-    global s
-    s, n = re.subn(pattern, lambda m: new.replace("\\1", m.group(1)) if m.groups() else new, s, count=1, flags=re.S)
-    print(f"[ok] {label}" if n else f"[!] not found: {label}")
+        a {
+            color: inherit;
+            text-decoration: none;
+            cursor: none;
+        }
+        button {
+            cursor: none;
+            border: none;
+            background: none;
+            color: inherit;
+            font-family: inherit;
+        }
+        img {
+            display: block;
+            max-width: 100%;
+        }
 
-# --- Titles / meta / terminal / console ---
-rep("Hassan Ali — Backend Engineer", "Hassan Ali — Senior Software Engineer", "title, og, twitter, terminal, console")
-rep("Backend Engineer with hands-on experience building web APIs", "Senior Software Engineer with hands-on experience building web APIs", "meta description")
-rep("Backend Engineer specializing in Python", "Senior Software Engineer specializing in Python", "og/twitter description")
-rep("Backend Engineer building robust APIs", "Senior Software Engineer building robust APIs", "hero subtitle")
-rep("Backend Engineer · Python · Django</div>", "Senior Software Engineer · Python · Django</div>", "profile card role")
-rep("Backend Engineer with hands-on experience building and maintaining web APIs and full-stack applications,",
-    "Senior Software Engineer with hands-on experience building and maintaining web APIs and full-stack applications,", "about + CV summary")
-rep("Hassan Ali · Backend Engineer", "Hassan Ali · Senior Software Engineer", "CV footer")
-rep("Backend Engineer · Python · Django · Flask", "Senior Software Engineer · Python · Django · Flask", "CV subhead")
-rep("strings: ['Backend Engineer',", "strings: ['Senior Software Engineer', 'Backend Engineer',", "typed strings", 1)
+        /* ===== CUSTOM CURSOR ===== */
+        .cursor-dot {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: #3B82F6;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+            transform: translate(-50%, -50%);
+            transition: width 0.15s, height 0.15s, background 0.15s;
+            will-change: transform;
+            mix-blend-mode: difference;
+        }
+        .cursor-ring {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99998;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+            will-change: transform;
+        }
+        .cursor-ring.active {
+            width: 64px;
+            height: 64px;
+            border-color: #3B82F6;
+            background: rgba(59, 130, 246, 0.08);
+        }
+        .cursor-ring.click {
+            width: 80px;
+            height: 80px;
+            border-color: #06B6D4;
+            background: rgba(6, 182, 212, 0.12);
+            transition: width 0.1s, height 0.1s;
+        }
 
-# --- About + CV summary: current work sentence ---
-rx(r"(<p>\s*)Background also spans systems administration",
-   "<p>\n                        Currently <span class=\"highlight-text\">leading delivery of a multi-tenant clinics SaaS</span> "
-   "with integrated AI agents, while serving a range of clients and products in parallel.\n                    </p>\n                    <p>\n"
-   "                        Background also spans systems administration", "about paragraph")
-rx(r"(<h2>Professional Summary</h2>\s*<p>)",
-   "\\1Currently leading delivery of a multi-tenant clinics SaaS with integrated AI agents. ", "CV summary sentence")
-rep("<span>Docker</span>", "<span>Docker</span>\n                        <span>AI Agents</span>", "CV skills list", 1)
+        @media (max-width: 768px) {
+            .cursor-dot,
+            .cursor-ring {
+                display: none !important;
+            }
+            body {
+                cursor: auto !important;
+            }
+            a,
+            button {
+                cursor: pointer !important;
+            }
+            html {
+                cursor: auto !important;
+            }
+        }
 
-# --- Skills ---
-rep("{ name: 'Algorithms', icon: 'fas fa-code-branch', cats: ['Core', 'Problem Solving'] },",
-    "{ name: 'Algorithms', icon: 'fas fa-code-branch', cats: ['Core', 'Problem Solving'] },\n"
-    "                { name: 'AI Agents', icon: 'fas fa-robot', cats: ['AI', 'Automation'] },", "skills data", 1)
-rep("'Algorithms': 'fas fa-code-branch',", "'Algorithms': 'fas fa-code-branch',\n                'AI Agents': 'fas fa-robot',", "icon map", 1)
+        /* ===== LOADING SCREEN ===== */
+        #loader {
+            position: fixed;
+            inset: 0;
+            z-index: 100000;
+            background: #050816;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: #94A3B8;
+            padding: 2rem;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+        #loader.hide {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        #loader .boot-line {
+            opacity: 0;
+            transform: translateY(8px);
+            animation: bootFade 0.5s ease forwards;
+            max-width: 600px;
+            width: 100%;
+            padding: 0.25rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        #loader .boot-line .prefix {
+            color: #3B82F6;
+            white-space: nowrap;
+        }
+        #loader .boot-line .text {
+            color: #F8FAFC;
+        }
+        #loader .boot-line .success {
+            color: #06B6D4;
+        }
+        #loader .boot-line.done .text {
+            color: #06B6D4;
+        }
+        #loader .progress-bar {
+            width: 200px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 2px;
+            margin-top: 2rem;
+            overflow: hidden;
+        }
+        #loader .progress-bar .fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #3B82F6, #06B6D4);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+        @keyframes bootFade {
+            0% {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @media (max-width: 480px) {
+            #loader {
+                font-size: 0.7rem;
+                padding: 1rem;
+            }
+            #loader .boot-line {
+                gap: 0.4rem;
+                padding: 0.15rem 0;
+            }
+            #loader .progress-bar {
+                width: 140px;
+            }
+        }
 
-# --- Experience ---
-exp = """experience: [{
+        /* ===== BACKGROUND LAYERS ===== */
+        #bg-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+            background-size: 60px 60px;
+            opacity: 0.5;
+        }
+        @media (max-width: 480px) {
+            .bg-grid {
+                background-size: 30px 30px;
+            }
+        }
+        .bg-aurora {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .bg-aurora .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.12;
+            will-change: transform;
+        }
+        .bg-aurora .blob:nth-child(1) {
+            width: 600px;
+            height: 600px;
+            top: -200px;
+            left: -200px;
+            background: #3B82F6;
+            animation: auroraFloat 20s ease-in-out infinite alternate;
+        }
+        .bg-aurora .blob:nth-child(2) {
+            width: 500px;
+            height: 500px;
+            bottom: -200px;
+            right: -200px;
+            background: #8B5CF6;
+            animation: auroraFloat 25s ease-in-out infinite alternate-reverse;
+        }
+        .bg-aurora .blob:nth-child(3) {
+            width: 400px;
+            height: 400px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #06B6D4;
+            animation: auroraFloat 30s ease-in-out infinite alternate;
+            opacity: 0.06;
+        }
+        @keyframes auroraFloat {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            33% {
+                transform: translate(60px, -40px) scale(1.05);
+            }
+            66% {
+                transform: translate(-30px, 60px) scale(0.95);
+            }
+            100% {
+                transform: translate(40px, 30px) scale(1.02);
+            }
+        }
+        @media (max-width: 768px) {
+            .bg-aurora .blob:nth-child(1) {
+                width: 300px;
+                height: 300px;
+                top: -100px;
+                left: -100px;
+            }
+            .bg-aurora .blob:nth-child(2) {
+                width: 250px;
+                height: 250px;
+                bottom: -100px;
+                right: -100px;
+            }
+            .bg-aurora .blob:nth-child(3) {
+                width: 200px;
+                height: 200px;
+            }
+        }
+        .bg-noise {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-size: 256px 256px;
+        }
+        .bg-spotlight {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background: radial-gradient(ellipse 600px 600px at 50% 50%, rgba(59, 130, 246, 0.04), transparent 70%);
+            transition: background-position 0.1s ease;
+            will-change: background-position;
+        }
+        @media (max-width: 768px) {
+            .bg-spotlight {
+                background: radial-gradient(ellipse 300px 300px at 50% 50%, rgba(59, 130, 246, 0.03), transparent 70%);
+            }
+        }
+
+        /* ===== LENIS ===== */
+        html.lenis {
+            height: auto;
+        }
+        .lenis.lenis-smooth {
+            scroll-behavior: auto;
+        }
+        .lenis.lenis-smooth [data-lenis-prevent] {
+            overscroll-behavior: contain;
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 0.6rem 1.2rem;
+            background: rgba(5, 8, 22, 0.7);
+            backdrop-filter: blur(20px) saturate(1.2);
+            -webkit-backdrop-filter: blur(20px) saturate(1.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), background 0.3s;
+            will-change: transform;
+        }
+        .navbar.hidden {
+            transform: translateY(-100%);
+        }
+        .navbar .inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .navbar .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #F8FAFC 60%, #94A3B8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-shrink: 0;
+        }
+        .navbar .logo .badge {
+            font-size: 0.5rem;
+            font-weight: 500;
+            padding: 0.1rem 0.4rem;
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 20px;
+            -webkit-text-fill-color: #94A3B8;
+            color: #94A3B8;
+            letter-spacing: 0.04em;
+        }
+        .navbar .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.15rem;
+            list-style: none;
+        }
+        .navbar .nav-links li a {
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.4rem 0.7rem;
+            border-radius: 8px;
+            color: #94A3B8;
+            transition: color 0.3s, background 0.3s;
+            position: relative;
+            letter-spacing: 0.01em;
+            white-space: nowrap;
+        }
+        .navbar .nav-links li a:hover {
+            color: #F8FAFC;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .navbar .nav-links li a::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: #3B82F6;
+            border-radius: 2px;
+            transition: width 0.3s ease, left 0.3s ease;
+        }
+        .navbar .nav-links li a:hover::after {
+            width: 50%;
+            left: 25%;
+        }
+        .navbar .nav-links li a.cv-btn {
+            background: rgba(59, 130, 246, 0.12);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            color: #F8FAFC;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.7rem;
+            transition: background 0.3s, border-color 0.3s, transform 0.2s;
+        }
+        .navbar .nav-links li a.cv-btn:hover {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.4);
+            transform: scale(1.02);
+        }
+        .navbar .nav-links li a.cv-btn::after {
+            display: none;
+        }
+        .navbar .nav-links li a.term-btn {
+            background: rgba(6, 182, 212, 0.08);
+            border: 1px solid rgba(6, 182, 212, 0.12);
+            color: #06B6D4;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 0.7rem;
+            transition: background 0.3s, border-color 0.3s, transform 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .navbar .nav-links li a.term-btn:hover {
+            background: rgba(6, 182, 212, 0.15);
+            border-color: rgba(6, 182, 212, 0.25);
+            transform: scale(1.02);
+        }
+        .navbar .nav-links li a.term-btn::after {
+            display: none;
+        }
+        .navbar .nav-links li a.kbd-hint {
+            font-size: 0.6rem;
+            color: #64748B;
+            padding: 0.15rem 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.02);
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 0.04em;
+        }
+        .navbar .nav-links li a.kbd-hint:hover {
+            background: rgba(255, 255, 255, 0.04);
+            color: #F8FAFC;
+        }
+        .navbar .nav-links li a.kbd-hint::after {
+            display: none;
+        }
+        .navbar .nav-links li a.matrix-btn {
+            font-size: 0.7rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            color: #94A3B8;
+            background: rgba(139, 92, 246, 0.06);
+            border: 1px solid rgba(139, 92, 246, 0.08);
+            transition: all 0.3s ease;
+        }
+        .navbar .nav-links li a.matrix-btn:hover {
+            color: #8B5CF6;
+            background: rgba(139, 92, 246, 0.12);
+            border-color: rgba(139, 92, 246, 0.2);
+        }
+        .navbar .nav-links li a.matrix-btn::after {
+            display: none;
+        }
+        .navbar .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            padding: 5px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            flex-shrink: 0;
+        }
+        .navbar .menu-toggle span {
+            width: 22px;
+            height: 2px;
+            background: #F8FAFC;
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+        .navbar .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(4px, 4px);
+        }
+        .navbar .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .navbar .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(4px, -4px);
+        }
+
+        @media (max-width: 1024px) {
+            .navbar .nav-links li a.kbd-hint,
+            .navbar .nav-links li a.matrix-btn {
+                display: none;
+            }
+        }
+        @media (max-width: 900px) {
+            .navbar {
+                padding: 0.5rem 1rem;
+            }
+            .navbar .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                background: rgba(5, 8, 22, 0.96);
+                backdrop-filter: blur(30px);
+                -webkit-backdrop-filter: blur(30px);
+                flex-direction: column;
+                padding: 4.5rem 1.5rem 2rem;
+                gap: 0.3rem;
+                transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                border-left: 1px solid rgba(255, 255, 255, 0.06);
+                align-items: stretch;
+                overflow-y: auto;
+            }
+            .navbar .nav-links.open {
+                right: 0;
+            }
+            .navbar .nav-links li a {
+                padding: 0.65rem 1rem;
+                font-size: 0.9rem;
+                border-radius: 10px;
+                width: 100%;
+                text-align: left;
+                white-space: normal;
+            }
+            .navbar .nav-links li a.cv-btn,
+            .navbar .nav-links li a.term-btn,
+            .navbar .nav-links li a.kbd-hint,
+            .navbar .nav-links li a.matrix-btn {
+                text-align: center;
+                margin-top: 0.2rem;
+                display: flex;
+                justify-content: center;
+            }
+            .navbar .nav-links li a.kbd-hint {
+                display: flex;
+            }
+            .navbar .menu-toggle {
+                display: flex;
+                z-index: 1001;
+            }
+            .navbar .logo .badge {
+                display: none;
+            }
+        }
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 0.4rem 0.8rem;
+            }
+            .navbar .logo {
+                font-size: 0.95rem;
+            }
+            .navbar .nav-links {
+                width: 100%;
+                max-width: 320px;
+                padding: 4rem 1.2rem 1.5rem;
+            }
+            .navbar .nav-links li a {
+                font-size: 0.85rem;
+                padding: 0.55rem 0.9rem;
+            }
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6rem 1.2rem 4rem;
+            overflow: hidden;
+        }
+        .hero .inner {
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+        .hero .content {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+        .hero .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #94A3B8;
+            padding: 0.25rem 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.02);
+            width: fit-content;
+        }
+        .hero .badge .dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #06B6D4;
+            animation: pulseDot 2s ease-in-out infinite;
+        }
+        @keyframes pulseDot {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+        }
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.4rem, 7vw, 5rem);
+            font-weight: 700;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            color: #F8FAFC;
+        }
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, #3B82F6, #06B6D4, #8B5CF6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero .subtitle {
+            font-size: clamp(0.9rem, 1.3vw, 1.3rem);
+            color: #94A3B8;
+            font-weight: 400;
+            max-width: 520px;
+            line-height: 1.7;
+        }
+        .hero .typing-wrap {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.8rem, 1.1vw, 1rem);
+            color: #94A3B8;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
+        .hero .typing-wrap .typed-cursor {
+            color: #3B82F6;
+            opacity: 1;
+            animation: blink 0.8s step-end infinite;
+        }
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
+        .hero .typing-wrap .label {
+            color: #94A3B8;
+        }
+        .hero .typing-wrap .text {
+            color: #F8FAFC;
+            font-weight: 500;
+        }
+        .hero .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.3rem;
+        }
+        .hero .actions .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.6rem 1.3rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.02);
+            color: #F8FAFC;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero .actions .btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(6, 182, 212, 0.04));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .hero .actions .btn:hover::before {
+            opacity: 1;
+        }
+        .hero .actions .btn-primary {
+            background: linear-gradient(135deg, #3B82F6, #06B6D4);
+            border-color: transparent;
+            color: #fff;
+            box-shadow: 0 4px 24px rgba(59, 130, 246, 0.2);
+        }
+        .hero .actions .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 40px rgba(59, 130, 246, 0.3);
+        }
+        .hero .actions .btn-primary::before {
+            display: none;
+        }
+        .hero .actions .btn-ghost {
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+        .hero .actions .btn-ghost:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.04);
+            transform: translateY(-2px);
+        }
+        .hero .actions .btn .icon {
+            font-size: 0.8rem;
+        }
+        .hero .actions .btn-terminal {
+            background: rgba(6, 182, 212, 0.06);
+            border-color: rgba(6, 182, 212, 0.1);
+            color: #06B6D4;
+        }
+        .hero .actions .btn-terminal:hover {
+            background: rgba(6, 182, 212, 0.12);
+            border-color: rgba(6, 182, 212, 0.2);
+            transform: translateY(-2px);
+        }
+        .hero .actions .btn-matrix {
+            background: rgba(139, 92, 246, 0.06);
+            border-color: rgba(139, 92, 246, 0.1);
+            color: #8B5CF6;
+        }
+        .hero .actions .btn-matrix:hover {
+            background: rgba(139, 92, 246, 0.12);
+            border-color: rgba(139, 92, 246, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .hero .visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .hero .profile-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 24px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 0 20px 80px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero .profile-card::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(6, 182, 212, 0.05), rgba(139, 92, 246, 0.1));
+            z-index: -1;
+            filter: blur(1px);
+        }
+        .hero .profile-card .avatar {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3B82F6, #06B6D4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 1rem;
+            box-shadow: 0 8px 32px rgba(59, 130, 246, 0.25);
+        }
+        .hero .profile-card .name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+        .hero .profile-card .role {
+            color: #94A3B8;
+            font-size: 0.8rem;
+            margin-top: 0.1rem;
+        }
+        .hero .profile-card .divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.06);
+            margin: 0.8rem 0;
+        }
+        .hero .profile-card .info-row {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.75rem;
+            color: #94A3B8;
+            padding: 0.2rem 0;
+        }
+        .hero .profile-card .info-row .icon {
+            width: 18px;
+            color: #3B82F6;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+        }
+        .hero .profile-card .info-row .value {
+            color: #F8FAFC;
+            font-size: 0.75rem;
+            word-break: break-word;
+        }
+
+        .hero .floating-geo {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.01);
+            backdrop-filter: blur(4px);
+            animation: floatGeo 8s ease-in-out infinite;
+            pointer-events: none;
+        }
+        .hero .floating-geo:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            top: -12px;
+            right: -12px;
+            animation-delay: -2s;
+            border-color: rgba(59, 130, 246, 0.1);
+        }
+        .hero .floating-geo:nth-child(3) {
+            width: 40px;
+            height: 40px;
+            bottom: -8px;
+            left: -8px;
+            animation-delay: -4s;
+            border-color: rgba(6, 182, 212, 0.08);
+        }
+        @keyframes floatGeo {
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+            50% {
+                transform: translate(8px, -12px) scale(1.05);
+            }
+        }
+
+        .hero .scroll-indicator {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            color: #94A3B8;
+            font-size: 0.55rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0.5;
+            animation: scrollBounce 2.5s ease-in-out infinite;
+        }
+        .hero .scroll-indicator .line {
+            width: 1px;
+            height: 30px;
+            background: linear-gradient(to bottom, #94A3B8, transparent);
+        }
+        @keyframes scrollBounce {
+            0%,
+            100% {
+                transform: translateX(-50%) translateY(0);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translateX(-50%) translateY(5px);
+                opacity: 0.8;
+            }
+        }
+
+        /* ===== HERO RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .hero .inner {
+                gap: 2rem;
+            }
+            .hero .profile-card {
+                max-width: 340px;
+                padding: 1.6rem;
+            }
+        }
+        @media (max-width: 820px) {
+            .hero .inner {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+                text-align: center;
+            }
+            .hero .content {
+                align-items: center;
+            }
+            .hero .subtitle {
+                max-width: 100%;
+            }
+            .hero .actions {
+                justify-content: center;
+            }
+            .hero .profile-card {
+                max-width: 360px;
+                margin: 0 auto;
+            }
+            .hero .badge {
+                align-self: center;
+            }
+            .hero .typing-wrap {
+                justify-content: center;
+            }
+            .hero .floating-geo:nth-child(2) {
+                width: 40px;
+                height: 40px;
+                top: -8px;
+                right: -8px;
+            }
+            .hero .floating-geo:nth-child(3) {
+                width: 30px;
+                height: 30px;
+                bottom: -6px;
+                left: -6px;
+            }
+            .hero {
+                padding: 5rem 1rem 3rem;
+                min-height: auto;
+            }
+            .hero .scroll-indicator {
+                display: none;
+            }
+        }
+        @media (max-width: 480px) {
+            .hero .profile-card {
+                max-width: 100%;
+                padding: 1.2rem;
+                border-radius: 18px;
+            }
+            .hero .profile-card .avatar {
+                width: 56px;
+                height: 56px;
+                font-size: 1.4rem;
+                margin-bottom: 0.7rem;
+            }
+            .hero .profile-card .name {
+                font-size: 1.1rem;
+            }
+            .hero .profile-card .role {
+                font-size: 0.7rem;
+            }
+            .hero .profile-card .info-row {
+                font-size: 0.65rem;
+                padding: 0.15rem 0;
+            }
+            .hero .profile-card .info-row .icon {
+                width: 16px;
+                font-size: 0.65rem;
+            }
+            .hero .profile-card .info-row .value {
+                font-size: 0.65rem;
+            }
+            .hero .actions .btn {
+                font-size: 0.7rem;
+                padding: 0.5rem 1rem;
+            }
+            .hero .actions .btn .icon {
+                font-size: 0.7rem;
+            }
+            .hero .badge {
+                font-size: 0.55rem;
+                padding: 0.2rem 0.6rem;
+            }
+            .hero .floating-geo:nth-child(2),
+            .hero .floating-geo:nth-child(3) {
+                display: none;
+            }
+        }
+
+        /* ===== SHORTCUTS BAR ===== */
+        .shortcuts-bar {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.4rem;
+            pointer-events: none;
+        }
+        .shortcuts-bar .shortcut-item {
+            pointer-events: all;
+            font-size: 0.55rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: #64748B;
+            background: rgba(5, 8, 22, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            user-select: none;
+        }
+        .shortcuts-bar .shortcut-item:hover {
+            color: #F8FAFC;
+            border-color: rgba(255, 255, 255, 0.08);
+            background: rgba(5, 8, 22, 0.85);
+        }
+        .shortcuts-bar .shortcut-item kbd {
+            background: rgba(255, 255, 255, 0.06);
+            padding: 0.05rem 0.35rem;
+            border-radius: 4px;
+            font-size: 0.5rem;
+            color: #94A3B8;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .shortcuts-bar .shortcut-item .icon {
+            font-size: 0.55rem;
+        }
+        .shortcuts-bar .shortcut-item.matrix-active {
+            color: #8B5CF6;
+            border-color: rgba(139, 92, 246, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .shortcuts-bar {
+                bottom: 0.8rem;
+                right: 0.8rem;
+                gap: 0.3rem;
+            }
+            .shortcuts-bar .shortcut-item {
+                font-size: 0.5rem;
+                padding: 0.15rem 0.5rem;
+                border-radius: 10px;
+            }
+            .shortcuts-bar .shortcut-item kbd {
+                font-size: 0.45rem;
+                padding: 0.05rem 0.3rem;
+            }
+            .shortcuts-bar .shortcut-item .icon {
+                font-size: 0.5rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .shortcuts-bar {
+                bottom: 0.6rem;
+                right: 0.6rem;
+            }
+            .shortcuts-bar .shortcut-item:not(.always-show) {
+                display: none;
+            }
+            .shortcuts-bar .shortcut-item.always-show {
+                display: inline-flex;
+            }
+            .shortcuts-bar .shortcut-item {
+                font-size: 0.45rem;
+                padding: 0.15rem 0.45rem;
+            }
+        }
+
+        /* ===== SECTION COMMON ===== */
+        section {
+            position: relative;
+            z-index: 1;
+            padding: 4rem 1.2rem;
+        }
+        .section-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #3B82F6;
+            margin-bottom: 0.4rem;
+        }
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(1.6rem, 3vw, 2.8rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #F8FAFC;
+            margin-bottom: 0.6rem;
+        }
+        .section-desc {
+            color: #94A3B8;
+            font-size: 0.95rem;
+            max-width: 540px;
+            line-height: 1.7;
+        }
+        .section-title .accent {
+            background: linear-gradient(135deg, #3B82F6, #06B6D4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        @media (max-width: 480px) {
+            section {
+                padding: 3rem 0.8rem;
+            }
+            .section-label {
+                font-size: 0.55rem;
+            }
+            .section-desc {
+                font-size: 0.85rem;
+            }
+        }
+
+        /* ===== ABOUT ===== */
+        #about .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            margin-top: 2rem;
+        }
+        #about .text-block {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        #about .text-block p {
+            color: #CBD5E1;
+            font-size: 0.92rem;
+            line-height: 1.8;
+        }
+        #about .text-block .highlight-text {
+            color: #F8FAFC;
+            font-weight: 500;
+        }
+        #about .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+        }
+        #about .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 1.2rem 0.8rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        #about .stat-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(59, 130, 246, 0.15);
+            transform: translateY(-2px);
+        }
+        #about .stat-card .number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3B82F6, #06B6D4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        #about .stat-card .label {
+            font-size: 0.7rem;
+            color: #94A3B8;
+            margin-top: 0.2rem;
+        }
+
+        @media (max-width: 768px) {
+            #about .grid {
+                grid-template-columns: 1fr;
+                gap: 1.8rem;
+            }
+            #about .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            #about .text-block p {
+                font-size: 0.88rem;
+            }
+        }
+        @media (max-width: 400px) {
+            #about .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.6rem;
+            }
+            #about .stat-card {
+                padding: 1rem 0.6rem;
+            }
+            #about .stat-card .number {
+                font-size: 1.5rem;
+            }
+            #about .stat-card .label {
+                font-size: 0.65rem;
+            }
+        }
+
+        /* ===== SKILLS ===== */
+        #skills .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 0.8rem;
+            margin-top: 2rem;
+        }
+        #skills .skill-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            padding: 1rem 0.8rem;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+        }
+        #skills .skill-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.06), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        #skills .skill-card:hover::before {
+            opacity: 1;
+        }
+        #skills .skill-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(59, 130, 246, 0.15);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 40px rgba(59, 130, 246, 0.04);
+        }
+        #skills .skill-card .icon {
+            font-size: 1.3rem;
+            margin-bottom: 0.3rem;
+            display: block;
+            color: #94A3B8;
+            transition: color 0.3s;
+        }
+        #skills .skill-card:hover .icon {
+            color: #F8FAFC;
+        }
+        #skills .skill-card .name {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #F8FAFC;
+            letter-spacing: 0.01em;
+        }
+        #skills .skill-card .cats {
+            font-size: 0.55rem;
+            color: #94A3B8;
+            margin-top: 0.15rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.15rem;
+            justify-content: center;
+        }
+        #skills .skill-card .cats span {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 0.05rem 0.4rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        @media (max-width: 768px) {
+            #skills .skills-grid {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+                gap: 0.6rem;
+            }
+            #skills .skill-card {
+                padding: 0.8rem 0.6rem;
+                border-radius: 12px;
+            }
+            #skills .skill-card .name {
+                font-size: 0.7rem;
+            }
+            #skills .skill-card .icon {
+                font-size: 1.1rem;
+            }
+        }
+        @media (max-width: 480px) {
+            #skills .skills-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+            }
+            #skills .skill-card {
+                padding: 0.7rem 0.4rem;
+                border-radius: 10px;
+            }
+            #skills .skill-card .name {
+                font-size: 0.65rem;
+            }
+            #skills .skill-card .icon {
+                font-size: 1rem;
+                margin-bottom: 0.2rem;
+            }
+            #skills .skill-card .cats {
+                font-size: 0.5rem;
+            }
+            #skills .skill-card .cats span {
+                padding: 0.05rem 0.3rem;
+            }
+        }
+
+        /* ===== EXPERIENCE ===== */
+        #experience .timeline {
+            position: relative;
+            margin-top: 2rem;
+            padding-left: 2rem;
+        }
+        #experience .timeline::before {
+            content: '';
+            position: absolute;
+            left: 4px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, rgba(59, 130, 246, 0.2), rgba(6, 182, 212, 0.1), transparent);
+        }
+        #experience .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            padding-left: 1.2rem;
+        }
+        #experience .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #050816;
+            border: 2px solid #3B82F6;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.15);
+            transition: all 0.3s ease;
+        }
+        #experience .timeline-item:hover::before {
+            border-color: #06B6D4;
+            box-shadow: 0 0 30px rgba(6, 182, 212, 0.2);
+            transform: scale(1.1);
+        }
+        #experience .timeline-item .header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 0.4rem 0.8rem;
+            margin-bottom: 0.2rem;
+        }
+        #experience .timeline-item .header .title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #F8FAFC;
+        }
+        #experience .timeline-item .header .company {
+            font-size: 0.8rem;
+            color: #94A3B8;
+        }
+        #experience .timeline-item .header .date {
+            font-size: 0.65rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: #64748B;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 0.1rem 0.6rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        #experience .timeline-item .desc {
+            color: #94A3B8;
+            font-size: 0.82rem;
+            line-height: 1.7;
+            max-width: 600px;
+            margin-top: 0.2rem;
+        }
+        #experience .timeline-item .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+            margin-top: 0.4rem;
+        }
+        #experience .timeline-item .tech-tags span {
+            font-size: 0.55rem;
+            font-weight: 500;
+            padding: 0.1rem 0.5rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            color: #94A3B8;
+            letter-spacing: 0.02em;
+        }
+        #experience .timeline-item .tech-tags span:hover {
+            border-color: rgba(59, 130, 246, 0.2);
+            color: #F8FAFC;
+        }
+
+        @media (max-width: 600px) {
+            #experience .timeline {
+                padding-left: 1.2rem;
+            }
+            #experience .timeline-item {
+                padding-left: 0.8rem;
+                margin-bottom: 1.5rem;
+            }
+            #experience .timeline-item::before {
+                left: -1.3rem;
+                width: 10px;
+                height: 10px;
+            }
+            #experience .timeline-item .header .title {
+                font-size: 0.9rem;
+            }
+            #experience .timeline-item .header .company {
+                font-size: 0.75rem;
+                width: 100%;
+            }
+            #experience .timeline-item .header .date {
+                font-size: 0.6rem;
+            }
+            #experience .timeline-item .desc {
+                font-size: 0.78rem;
+            }
+        }
+
+        /* ===== PROJECTS ===== */
+        #projects .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.2rem;
+            margin-top: 2rem;
+        }
+        #projects .project-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 18px;
+            padding: 1.5rem;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        #projects .project-card::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.04), rgba(6, 182, 212, 0.02), rgba(139, 92, 246, 0.03));
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        #projects .project-card:hover::before {
+            opacity: 1;
+        }
+        #projects .project-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(59, 130, 246, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.035);
+        }
+        #projects .project-card .emoji {
+            font-size: 1.6rem;
+            margin-bottom: 0.4rem;
+            display: block;
+        }
+        #projects .project-card .p-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #F8FAFC;
+            margin-bottom: 0.2rem;
+        }
+        #projects .project-card .p-desc {
+            font-size: 0.8rem;
+            color: #94A3B8;
+            line-height: 1.6;
+            margin-bottom: 0.6rem;
+        }
+        #projects .project-card .p-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+            margin-bottom: 0.2rem;
+        }
+        #projects .project-card .p-tags span {
+            font-size: 0.55rem;
+            font-weight: 500;
+            padding: 0.1rem 0.5rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            color: #94A3B8;
+        }
+
+        @media (max-width: 768px) {
+            #projects .projects-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.8rem;
+            }
+            #projects .project-card {
+                padding: 1.2rem;
+                border-radius: 14px;
+            }
+            #projects .project-card .p-title {
+                font-size: 0.9rem;
+            }
+            #projects .project-card .p-desc {
+                font-size: 0.75rem;
+            }
+            #projects .project-card .emoji {
+                font-size: 1.4rem;
+            }
+        }
+        @media (max-width: 500px) {
+            #projects .projects-grid {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+            }
+            #projects .project-card {
+                padding: 1rem;
+                border-radius: 12px;
+            }
+            #projects .project-card .p-title {
+                font-size: 0.85rem;
+            }
+            #projects .project-card .p-desc {
+                font-size: 0.75rem;
+            }
+        }
+
+        /* ===== EDUCATION ===== */
+        #education .edu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+            margin-top: 2rem;
+        }
+        #education .edu-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            padding: 1.3rem;
+            transition: all 0.3s ease;
+        }
+        #education .edu-card:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+        #education .edu-card .e-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #F8FAFC;
+        }
+        #education .edu-card .e-school {
+            font-size: 0.8rem;
+            color: #94A3B8;
+        }
+        #education .edu-card .e-date {
+            font-size: 0.65rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: #64748B;
+            margin-top: 0.15rem;
+        }
+        #education .edu-card .e-desc {
+            font-size: 0.78rem;
+            color: #94A3B8;
+            margin-top: 0.4rem;
+            line-height: 1.6;
+        }
+
+        #education .certs {
+            margin-top: 2rem;
+        }
+        #education .certs .cert-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 0.6rem;
+            margin-top: 0.8rem;
+        }
+        #education .certs .cert-item {
+            font-size: 0.75rem;
+            padding: 0.5rem 0.8rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 10px;
+            color: #94A3B8;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        #education .certs .cert-item:hover {
+            border-color: rgba(59, 130, 246, 0.12);
+            color: #F8FAFC;
+            background: rgba(255, 255, 255, 0.03);
+        }
+        #education .certs .cert-item .ci {
+            color: #3B82F6;
+            font-size: 0.65rem;
+        }
+
+        @media (max-width: 768px) {
+            #education .edu-grid {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+            }
+            #education .edu-card {
+                padding: 1rem;
+            }
+            #education .edu-card .e-title {
+                font-size: 0.88rem;
+            }
+            #education .certs .cert-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 480px) {
+            #education .certs .cert-grid {
+                grid-template-columns: 1fr;
+            }
+            #education .edu-card .e-desc {
+                font-size: 0.75rem;
+            }
+            #education .certs .cert-item {
+                font-size: 0.7rem;
+                padding: 0.4rem 0.6rem;
+            }
+        }
+
+        /* ===== CONTACT ===== */
+        #contact .contact-wrap {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            margin-top: 2rem;
+            align-items: start;
+        }
+        #contact .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        #contact .contact-info p {
+            color: #94A3B8;
+            font-size: 0.92rem;
+            line-height: 1.7;
+        }
+        #contact .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.7rem 1rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        #contact .contact-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.08);
+            transform: translateX(3px);
+        }
+        #contact .contact-item .ci-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #3B82F6;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+        #contact .contact-item .ci-text {
+            font-size: 0.8rem;
+            color: #F8FAFC;
+            word-break: break-word;
+        }
+        #contact .contact-item .ci-sub {
+            font-size: 0.65rem;
+            color: #64748B;
+        }
+
+        #contact .contact-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 18px;
+            padding: 1.8rem;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            position: relative;
+            overflow: hidden;
+        }
+        #contact .contact-card::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.04), rgba(6, 182, 212, 0.02));
+            z-index: -1;
+        }
+        #contact .contact-card .cc-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+        #contact .contact-card .cc-sub {
+            color: #94A3B8;
+            font-size: 0.8rem;
+            margin-bottom: 1.2rem;
+        }
+        #contact .contact-card .social-row {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+        #contact .contact-card .social-row a {
+            padding: 0.4rem 1rem;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.02);
+            font-size: 0.75rem;
+            color: #94A3B8;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        #contact .contact-card .social-row a:hover {
+            border-color: rgba(59, 130, 246, 0.15);
+            color: #F8FAFC;
+            background: rgba(255, 255, 255, 0.04);
+            transform: translateY(-2px);
+        }
+        #contact .contact-card .social-row a .si {
+            color: #3B82F6;
+        }
+        #contact .contact-card .social-row a.cv-download {
+            background: rgba(59, 130, 246, 0.08);
+            border-color: rgba(59, 130, 246, 0.15);
+            color: #F8FAFC;
+        }
+        #contact .contact-card .social-row a.cv-download:hover {
+            background: rgba(59, 130, 246, 0.15);
+            border-color: rgba(59, 130, 246, 0.25);
+        }
+
+        @media (max-width: 768px) {
+            #contact .contact-wrap {
+                grid-template-columns: 1fr;
+                gap: 1.8rem;
+            }
+            #contact .contact-card {
+                padding: 1.2rem;
+            }
+            #contact .contact-item {
+                padding: 0.6rem 0.8rem;
+            }
+            #contact .contact-item .ci-text {
+                font-size: 0.75rem;
+            }
+            #contact .contact-info p {
+                font-size: 0.88rem;
+            }
+            #contact .contact-card .social-row a {
+                font-size: 0.7rem;
+                padding: 0.35rem 0.8rem;
+            }
+        }
+        @media (max-width: 480px) {
+            #contact .contact-card .social-row {
+                gap: 0.4rem;
+            }
+            #contact .contact-card .social-row a {
+                font-size: 0.65rem;
+                padding: 0.3rem 0.7rem;
+            }
+            #contact .contact-item .ci-icon {
+                width: 28px;
+                height: 28px;
+                font-size: 0.7rem;
+            }
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            position: relative;
+            z-index: 1;
+            padding: 2.5rem 1.2rem 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        footer .inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+        footer .copy {
+            font-size: 0.7rem;
+            color: #64748B;
+        }
+        footer .copy .heart {
+            color: #3B82F6;
+        }
+        footer .footer-links {
+            display: flex;
+            gap: 1.2rem;
+            font-size: 0.7rem;
+            color: #64748B;
+            flex-wrap: wrap;
+        }
+        footer .footer-links a {
+            transition: color 0.3s;
+        }
+        footer .footer-links a:hover {
+            color: #F8FAFC;
+        }
+        @media (max-width: 480px) {
+            footer .inner {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.8rem;
+            }
+            footer .footer-links {
+                justify-content: center;
+                gap: 0.6rem 1rem;
+                font-size: 0.65rem;
+            }
+            footer .copy {
+                font-size: 0.65rem;
+            }
+        }
+
+        /* ===== TERMINAL OVERLAY ===== */
+        #terminal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 50000;
+            background: rgba(5, 8, 22, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1.2rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        #terminal-overlay.open {
+            display: flex;
+        }
+        #terminal-overlay .term-wrap {
+            width: 100%;
+            max-width: 720px;
+            max-height: 85vh;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        #terminal-overlay .term-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            font-size: 0.65rem;
+            color: #64748B;
+            flex-shrink: 0;
+        }
+        #terminal-overlay .term-header .dots {
+            display: flex;
+            gap: 5px;
+        }
+        #terminal-overlay .term-header .dots span {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        #terminal-overlay .term-header .dots span:nth-child(1) {
+            background: #EF4444;
+        }
+        #terminal-overlay .term-header .dots span:nth-child(2) {
+            background: #F59E0B;
+        }
+        #terminal-overlay .term-header .dots span:nth-child(3) {
+            background: #10B981;
+        }
+        #terminal-overlay .term-header .title {
+            margin-left: 0.3rem;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            font-size: 0.65rem;
+        }
+        #terminal-overlay .term-header .close-btn {
+            margin-left: auto;
+            font-size: 1.1rem;
+            color: #64748B;
+            transition: color 0.3s;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0 0.3rem;
+        }
+        #terminal-overlay .term-header .close-btn:hover {
+            color: #F8FAFC;
+        }
+        #terminal-overlay .term-body {
+            padding: 1rem;
+            overflow-y: auto;
+            flex: 1;
+            min-height: 180px;
+            max-height: 50vh;
+        }
+        #terminal-overlay .term-body .line {
+            color: #94A3B8;
+            font-size: 0.75rem;
+            padding: 0.1rem 0;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        #terminal-overlay .term-body .line .prompt {
+            color: #06B6D4;
+        }
+        #terminal-overlay .term-body .line .cmd {
+            color: #F8FAFC;
+        }
+        #terminal-overlay .term-body .line .output {
+            color: #CBD5E1;
+        }
+        #terminal-overlay .term-body .line .error {
+            color: #EF4444;
+        }
+        #terminal-overlay .term-body .line .success {
+            color: #10B981;
+        }
+        #terminal-overlay .term-body .line .highlight {
+            color: #3B82F6;
+        }
+        #terminal-overlay .term-input-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.4rem 1rem 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            flex-shrink: 0;
+        }
+        #terminal-overlay .term-input-wrap .prompt {
+            color: #06B6D4;
+            font-size: 0.75rem;
+            font-weight: 500;
+            font-family: 'JetBrains Mono', monospace;
+            flex-shrink: 0;
+        }
+        #terminal-overlay .term-input-wrap input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #F8FAFC;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            outline: none;
+            padding: 0.2rem 0;
+            min-width: 0;
+            width: 100%;
+        }
+        #terminal-overlay .term-input-wrap input::placeholder {
+            color: #64748B;
+        }
+
+        @media (max-width: 600px) {
+            #terminal-overlay {
+                padding: 0.6rem;
+            }
+            #terminal-overlay .term-wrap {
+                max-height: 92vh;
+                border-radius: 12px;
+            }
+            #terminal-overlay .term-header {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.6rem;
+            }
+            #terminal-overlay .term-header .dots span {
+                width: 8px;
+                height: 8px;
+            }
+            #terminal-overlay .term-body {
+                padding: 0.8rem;
+                min-height: 140px;
+                max-height: 45vh;
+            }
+            #terminal-overlay .term-body .line {
+                font-size: 0.7rem;
+            }
+            #terminal-overlay .term-input-wrap {
+                padding: 0.3rem 0.8rem 0.8rem;
+            }
+            #terminal-overlay .term-input-wrap .prompt {
+                font-size: 0.7rem;
+            }
+            #terminal-overlay .term-input-wrap input {
+                font-size: 0.7rem;
+            }
+        }
+        @media (max-width: 400px) {
+            #terminal-overlay .term-body .line {
+                font-size: 0.6rem;
+            }
+            #terminal-overlay .term-input-wrap input {
+                font-size: 0.6rem;
+            }
+            #terminal-overlay .term-input-wrap .prompt {
+                font-size: 0.6rem;
+            }
+        }
+
+        /* ===== COMMAND PALETTE ===== */
+        #cmd-palette {
+            position: fixed;
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%) scale(0.95);
+            z-index: 60000;
+            background: rgba(5, 8, 22, 0.92);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 18px;
+            padding: 1.2rem;
+            width: 90%;
+            max-width: 520px;
+            box-shadow: 0 40px 120px rgba(0, 0, 0, 0.6);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        #cmd-palette.open {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateX(-50%) scale(1);
+        }
+        #cmd-palette .cp-input {
+            width: 100%;
+            padding: 0.6rem 0.9rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            color: #F8FAFC;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        #cmd-palette .cp-input:focus {
+            border-color: rgba(59, 130, 246, 0.2);
+        }
+        #cmd-palette .cp-input::placeholder {
+            color: #64748B;
+        }
+        #cmd-palette .cp-results {
+            margin-top: 0.6rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        #cmd-palette .cp-results .cp-item {
+            padding: 0.5rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: #94A3B8;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+        #cmd-palette .cp-results .cp-item:hover,
+        #cmd-palette .cp-results .cp-item.active {
+            background: rgba(255, 255, 255, 0.04);
+            color: #F8FAFC;
+        }
+        #cmd-palette .cp-results .cp-item .cp-icon {
+            color: #3B82F6;
+            font-size: 0.75rem;
+            width: 18px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        #cmd-palette .cp-hint {
+            margin-top: 0.6rem;
+            font-size: 0.6rem;
+            color: #64748B;
+            text-align: center;
+            letter-spacing: 0.04em;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            padding-top: 0.5rem;
+        }
+        #cmd-palette .cp-hint kbd {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.05rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.55rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: #64748B;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        #palette-overlay-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 59999;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        #palette-overlay-bg.open {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        @media (max-width: 600px) {
+            #cmd-palette {
+                top: 10%;
+                padding: 1rem;
+                max-width: 95%;
+                border-radius: 14px;
+            }
+            #cmd-palette .cp-input {
+                font-size: 0.85rem;
+                padding: 0.5rem 0.8rem;
+            }
+            #cmd-palette .cp-results .cp-item {
+                font-size: 0.75rem;
+                padding: 0.4rem 0.7rem;
+            }
+            #cmd-palette .cp-hint {
+                font-size: 0.55rem;
+            }
+        }
+        @media (max-width: 400px) {
+            #cmd-palette {
+                top: 8%;
+                padding: 0.8rem;
+                border-radius: 12px;
+            }
+            #cmd-palette .cp-input {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.7rem;
+            }
+            #cmd-palette .cp-results .cp-item {
+                font-size: 0.7rem;
+                padding: 0.35rem 0.6rem;
+            }
+        }
+
+        /* ===== RESPONSIVE UTILITY ===== */
+        .hidden-mobile {
+            display: block;
+        }
+        @media (max-width: 768px) {
+            .hidden-mobile {
+                display: none;
+            }
+            .section-title {
+                font-size: 1.6rem;
+            }
+        }
+
+        /* ===== REDUCED MOTION ===== */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            .cursor-dot,
+            .cursor-ring {
+                display: none !important;
+            }
+            body {
+                cursor: auto !important;
+            }
+            a,
+            button {
+                cursor: pointer !important;
+            }
+            .bg-aurora .blob {
+                animation: none !important;
+            }
+            .hero .scroll-indicator {
+                animation: none !important;
+            }
+            .hero .floating-geo {
+                animation: none !important;
+            }
+        }
+
+        /* ===== MATRIX OVERLAY ===== */
+        #matrix-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+        #matrix-canvas.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* ===== MISC ===== */
+        .glow-text {
+            text-shadow: 0 0 40px rgba(59, 130, 246, 0.05);
+        }
+        .border-glow {
+            box-shadow: 0 0 60px rgba(59, 130, 246, 0.02);
+        }
+
+        /* ===== KONAMI TOAST ===== */
+        .konami-toast {
+            position: fixed;
+            bottom: 5rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            z-index: 99998;
+            background: rgba(5, 8, 22, 0.92);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 14px;
+            padding: 0.7rem 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: #8B5CF6;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            text-align: center;
+            max-width: 90%;
+        }
+        .konami-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: all;
+        }
+        .konami-toast .sub {
+            color: #94A3B8;
+            font-size: 0.55rem;
+            font-weight: 400;
+        }
+        @media (max-width: 480px) {
+            .konami-toast {
+                font-size: 0.65rem;
+                padding: 0.5rem 1rem;
+                bottom: 4rem;
+                border-radius: 12px;
+                max-width: 92%;
+            }
+            .konami-toast .sub {
+                font-size: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== LOADER ===== -->
+    <div id="loader" role="status" aria-label="Loading">
+        <div id="boot-lines"></div>
+        <div class="progress-bar">
+            <div class="fill" id="boot-progress"></div>
+        </div>
+    </div>
+
+    <!-- ===== CUSTOM CURSOR ===== -->
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
+    <!-- ===== BACKGROUND ===== -->
+    <canvas id="bg-canvas"></canvas>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-aurora" aria-hidden="true">
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+    </div>
+    <div class="bg-noise" aria-hidden="true"></div>
+    <div class="bg-spotlight" id="spotlight" aria-hidden="true"></div>
+
+    <!-- ===== MATRIX OVERLAY ===== -->
+    <canvas id="matrix-canvas"></canvas>
+
+    <!-- ===== KONAMI TOAST ===== -->
+    <div class="konami-toast" id="konamiToast">
+        🎮 KONAMI CODE ACTIVATED!<br>
+        <span class="sub">✨ Matrix mode engaged — type <kbd style="background:rgba(255,255,255,0.04);padding:0.05rem 0.4rem;border-radius:4px;color:#F8FAFC;border:1px solid rgba(255,255,255,0.04);">matrix</kbd> in terminal to toggle</span>
+    </div>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
+        <div class="inner">
+            <a href="#hero" class="logo" aria-label="Home">
+                HA
+                <span class="badge">v2.0</span>
+            </a>
+            <ul class="nav-links" id="navLinks" role="menubar">
+                <li role="none"><a href="#about" role="menuitem">About</a></li>
+                <li role="none"><a href="#skills" role="menuitem">Skills</a></li>
+                <li role="none"><a href="#experience" role="menuitem">Experience</a></li>
+                <li role="none"><a href="#projects" role="menuitem">Projects</a></li>
+                <li role="none"><a href="#education" role="menuitem">Education</a></li>
+                <li role="none"><a href="#contact" role="menuitem">Contact</a></li>
+                <li role="none">
+                    <a href="#" class="term-btn" id="navTermBtn" role="menuitem">
+                        <i class="fas fa-terminal"></i> Terminal
+                    </a>
+                </li>
+                <li role="none">
+                    <a href="#" class="kbd-hint" id="navKbdHint" role="menuitem" title="Command Palette (Ctrl+K)">
+                        <i class="fas fa-search" style="font-size:0.55rem;"></i> ⌘K
+                    </a>
+                </li>
+                <li role="none">
+                    <a href="#" class="matrix-btn" id="navMatrixBtn" role="menuitem" title="Toggle Matrix Mode">
+                        <i class="fas fa-cube"></i>
+                    </a>
+                </li>
+                <li role="none"><a href="#" class="cv-btn" id="cvDownloadBtn" role="menuitem">
+                        <i class="fas fa-download" style="font-size:0.65rem;"></i> CV
+                    </a></li>
+            </ul>
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ===== SHORTCUTS BAR ===== -->
+    <div class="shortcuts-bar" id="shortcutsBar" aria-hidden="true">
+        <div class="shortcut-item always-show" id="shortcutTerminal" title="Open Terminal (T)">
+            <span class="icon"><i class="fas fa-terminal"></i></span>
+            <kbd>T</kbd>
+        </div>
+        <div class="shortcut-item" id="shortcutPalette" title="Command Palette (Ctrl+K)">
+            <span class="icon"><i class="fas fa-search"></i></span>
+            <kbd>⌘K</kbd>
+        </div>
+        <div class="shortcut-item" id="shortcutMatrix" title="Toggle Matrix Mode">
+            <span class="icon"><i class="fas fa-cube"></i></span>
+            <kbd>M</kbd>
+        </div>
+        <div class="shortcut-item" id="shortcutKonami" title="Konami Code! ↑↑↓↓←→←→BA">
+            <span class="icon"><i class="fas fa-gamepad"></i></span>
+            <kbd>🎮</kbd>
+        </div>
+    </div>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero" id="hero" data-section>
+        <div class="inner">
+            <div class="content">
+                <div class="badge">
+                    <span class="dot"></span>
+                    Available for opportunities
+                </div>
+                <h1>
+                    Hassan<br>
+                    <span class="highlight">Ali</span>
+                </h1>
+                <p class="subtitle">
+                    Senior Software Engineer building, scaling and maintaining web APIs and full-stack applications with Python, Django, and Flask — with AI agents, multi-tenant SaaS and Docker in the mix.
+                </p>
+                <div class="typing-wrap">
+                    <span class="label">▸</span>
+                    <span class="text" id="typed-text"></span>
+                </div>
+                <div class="actions">
+                    <a href="#contact" class="btn btn-primary">
+                        <i class="fas fa-paper-plane icon"></i> Contact
+                    </a>
+                    <a href="#" class="btn btn-ghost" id="cvDownloadBtn2">
+                        <i class="fas fa-file-pdf icon"></i> Download CV
+                    </a>
+                    <a href="https://github.com/HassanAli66" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">
+                        <i class="fab fa-github icon"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/hassan-ali-0839b421a/" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">
+                        <i class="fab fa-linkedin-in icon"></i>
+                    </a>
+                    <button class="btn btn-terminal" id="heroTermBtn" aria-label="Open Terminal">
+                        <i class="fas fa-terminal icon"></i> <kbd style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;background:rgba(255,255,255,0.04);padding:0.05rem 0.35rem;border-radius:4px;border:1px solid rgba(255,255,255,0.04);">T</kbd>
+                    </button>
+                    <button class="btn btn-matrix" id="heroMatrixBtn" aria-label="Toggle Matrix Mode">
+                        <i class="fas fa-cube icon"></i> Matrix
+                    </button>
+                </div>
+            </div>
+            <div class="visual">
+                <div class="profile-card" data-tilt>
+                    <div class="floating-geo"></div>
+                    <div class="floating-geo"></div>
+                    <div class="avatar">HA</div>
+                    <div class="name">Hassan Ali</div>
+                    <div class="role">Senior Software Engineer · Python · Django</div>
+                    <div class="divider"></div>
+                    <div class="info-row">
+                        <span class="icon"><i class="fas fa-map-pin"></i></span>
+                        <span>Alexandria, Egypt</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="icon"><i class="fas fa-envelope"></i></span>
+                        <span class="value">hassanalihassan10101@gmail.com</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="icon"><i class="fas fa-phone"></i></span>
+                        <span class="value">+20 120 081 6047</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="icon"><i class="fab fa-github"></i></span>
+                        <span class="value">HassanAli66</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="icon"><i class="fab fa-linkedin-in"></i></span>
+                        <span class="value" style="font-size:0.65rem;">linkedin.com/in/hassan-ali-0839b421a</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator" aria-hidden="true">
+            <span>Scroll</span>
+            <div class="line"></div>
+        </div>
+    </section>
+
+    <!-- ===== ABOUT ===== -->
+    <section id="about" data-section>
+        <div class="section-inner">
+            <span class="section-label">About</span>
+            <h2 class="section-title">Engineering <span class="accent">solutions</span></h2>
+            <div class="grid">
+                <div class="text-block">
+                    <p>
+                        Senior Software Engineer with hands-on experience building, scaling and maintaining web APIs and
+                        full-stack applications, primarily in <span class="highlight-text">Python (Django, Flask)</span>,
+                        with additional exposure to .NET/ASP.NET Core and Node.js (NestJS, Next.js).
+                    </p>
+                    <p>
+                        Currently delivering a <span class="highlight-text">large-scale, multi-tenant clinics management SaaS</span>
+                        with integrated <span class="highlight-text">AI agents</span>, while handling multiple clients and
+                        products in parallel. Comfortable across the stack, from relational and NoSQL database design
+                        (<span class="highlight-text">PostgreSQL, MongoDB</span>) to containerized deployments with
+                        <span class="highlight-text">Docker</span> and Linux administration.
+                    </p>
+                    <p>
+                        Background also spans systems administration (military service), a self-directed Extended Reality (XR)
+                        hardware/software project, cross-platform mobile development (Flutter, React Native),
+                        computer vision/automation with OpenCV, and data analysis. Strong problem-solving foundation backed by
+                        a Computer Engineering degree and applied data science training.
+                    </p>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="number">6+</div>
+                        <div class="label">Years Experience</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">20+</div>
+                        <div class="label">Technologies</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">∞</div>
+                        <div class="label">Problem Solving</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">⚡</div>
+                        <div class="label">AI · XR · SaaS</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SKILLS ===== -->
+    <section id="skills" data-section>
+        <div class="section-inner">
+            <span class="section-label">Expertise</span>
+            <h2 class="section-title">Technical <span class="accent">arsenal</span></h2>
+            <p class="section-desc">A curated set of technologies I work with daily — no progress bars, just capability.</p>
+            <div class="skills-grid" id="skillsGrid"></div>
+        </div>
+    </section>
+
+    <!-- ===== EXPERIENCE ===== -->
+    <section id="experience" data-section>
+        <div class="section-inner">
+            <span class="section-label">Career</span>
+            <h2 class="section-title">Professional <span class="accent">journey</span></h2>
+            <p class="section-desc">From systems administration to senior backend engineering — a path of continuous growth.</p>
+            <div class="timeline" id="timeline"></div>
+        </div>
+    </section>
+
+    <!-- ===== PROJECTS ===== -->
+    <section id="projects" data-section>
+        <div class="section-inner">
+            <span class="section-label">Portfolio</span>
+            <h2 class="section-title">Notable <span class="accent">work</span></h2>
+            <p class="section-desc">Projects that showcase my engineering approach and technical depth.</p>
+            <div class="projects-grid" id="projectsGrid"></div>
+        </div>
+    </section>
+
+    <!-- ===== EDUCATION ===== -->
+    <section id="education" data-section>
+        <div class="section-inner">
+            <span class="section-label">Learning</span>
+            <h2 class="section-title">Education &amp; <span class="accent">certifications</span></h2>
+            <div class="edu-grid" id="eduGrid"></div>
+            <div class="certs">
+                <h3 style="font-family:'Space Grotesk',sans-serif;font-size:0.95rem;font-weight:600;color:#F8FAFC;margin-bottom:0.4rem;">
+                    <i class="fas fa-certificate" style="color:#3B82F6;margin-right:0.4rem;"></i>Certifications &amp; Courses
+                </h3>
+                <div class="cert-grid" id="certGrid"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CONTACT ===== -->
+    <section id="contact" data-section>
+        <div class="section-inner">
+            <span class="section-label">Connect</span>
+            <h2 class="section-title">Get in <span class="accent">touch</span></h2>
+            <div class="contact-wrap">
+                <div class="contact-info">
+                    <p>
+                        I'm always open to interesting conversations, collaboration opportunities, or just a friendly
+                        hello. Reach out through any of the channels below.
+                    </p>
+                    <div class="contact-item">
+                        <div class="ci-icon"><i class="fas fa-envelope"></i></div>
+                        <div>
+                            <div class="ci-text">hassanalihassan10101@gmail.com</div>
+                            <div class="ci-sub">Email</div>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="ci-icon"><i class="fas fa-phone"></i></div>
+                        <div>
+                            <div class="ci-text">+20 120 081 6047</div>
+                            <div class="ci-sub">Phone</div>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="ci-icon"><i class="fas fa-map-pin"></i></div>
+                        <div>
+                            <div class="ci-text">Alexandria, Egypt</div>
+                            <div class="ci-sub">Location</div>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="ci-icon"><i class="fab fa-github"></i></div>
+                        <div>
+                            <div class="ci-text">HassanAli66</div>
+                            <div class="ci-sub"><a href="https://github.com/HassanAli66" target="_blank" rel="noopener noreferrer" style="color:#3B82F6;text-decoration:underline;">github.com/HassanAli66</a></div>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="ci-icon"><i class="fab fa-linkedin-in"></i></div>
+                        <div>
+                            <div class="ci-text">Hassan Ali</div>
+                            <div class="ci-sub"><a href="https://www.linkedin.com/in/hassan-ali-0839b421a/" target="_blank" rel="noopener noreferrer" style="color:#3B82F6;text-decoration:underline;">linkedin.com/in/hassan-ali-0839b421a</a></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-card">
+                    <div class="cc-title">Let's build something</div>
+                    <div class="cc-sub">Find me on these platforms</div>
+                    <div class="social-row">
+                        <a href="https://github.com/HassanAli66" target="_blank" rel="noopener noreferrer">
+                            <i class="fab fa-github si"></i> GitHub
+                        </a>
+                        <a href="https://www.linkedin.com/in/hassan-ali-0839b421a/" target="_blank" rel="noopener noreferrer">
+                            <i class="fab fa-linkedin-in si"></i> LinkedIn
+                        </a>
+                        <a href="#" class="cv-download" id="cvDownloadBtn3">
+                            <i class="fas fa-file-pdf si"></i> CV
+                        </a>
+                    </div>
+                    <div style="margin-top:1rem;font-size:0.65rem;color:#64748B;display:flex;flex-wrap:wrap;gap:0.3rem 0.6rem;">
+                        <kbd style="background:rgba(255,255,255,0.04);padding:0.1rem 0.4rem;border-radius:4px;font-family:'JetBrains Mono',monospace;border:1px solid rgba(255,255,255,0.04);">T</kbd>
+                        terminal &nbsp;·&nbsp; <kbd style="background:rgba(255,255,255,0.04);padding:0.1rem 0.4rem;border-radius:4px;font-family:'JetBrains Mono',monospace;border:1px solid rgba(255,255,255,0.04);">⌘K</kbd>
+                        palette &nbsp;·&nbsp; <kbd style="background:rgba(255,255,255,0.04);padding:0.1rem 0.4rem;border-radius:4px;font-family:'JetBrains Mono',monospace;border:1px solid rgba(255,255,255,0.04);">M</kbd>
+                        matrix
+                    </div>
+                    <div style="margin-top:0.4rem;font-size:0.55rem;color:#64748B;">
+                        🎮 <span style="color:#8B5CF6;">Konami code</span> ↑↑↓↓←→←→BA
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <div class="inner">
+            <div class="copy">
+                &copy; 2026 Hassan Ali &nbsp;·&nbsp; Built with <span class="heart">♥</span> &nbsp;·&nbsp; <span style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:#64748B;">v2.0</span>
+            </div>
+            <div class="footer-links">
+                <a href="#hero">Home</a>
+                <a href="#about">About</a>
+                <a href="#experience">Experience</a>
+                <a href="#projects">Projects</a>
+                <a href="#contact">Contact</a>
+                <a href="#" id="cvDownloadBtn4">CV</a>
+                <a href="#" id="footerTermBtn" style="color:#06B6D4;"><i class="fas fa-terminal"></i> Terminal</a>
+                <a href="#" id="footerMatrixBtn" style="color:#8B5CF6;"><i class="fas fa-cube"></i> Matrix</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== TERMINAL OVERLAY ===== -->
+    <div id="terminal-overlay" role="dialog" aria-label="Terminal">
+        <div class="term-wrap">
+            <div class="term-header">
+                <div class="dots"><span></span><span></span><span></span></div>
+                <span class="title">~/portfolio</span>
+                <button class="close-btn" id="termClose" aria-label="Close terminal">&times;</button>
+            </div>
+            <div class="term-body" id="termBody">
+                <div class="line"><span style="color:#64748B;">── Welcome to the interactive terminal ──</span></div>
+                <div class="line"><span style="color:#64748B;">Type <span style="color:#3B82F6;">help</span> for available commands</span></div>
+                <div class="line"><span style="color:#64748B;">🎮 Try <span style="color:#8B5CF6;">matrix</span> or <span style="color:#8B5CF6;">konami</span> for fun!</span></div>
+            </div>
+            <div class="term-input-wrap">
+                <span class="prompt">$</span>
+                <input type="text" id="termInput" placeholder="Enter command..." autofocus spellcheck="false">
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== COMMAND PALETTE ===== -->
+    <div id="palette-overlay-bg"></div>
+    <div id="cmd-palette" role="dialog" aria-label="Command palette">
+        <input type="text" class="cp-input" id="cpInput" placeholder="Search sections..." autofocus spellcheck="false">
+        <div class="cp-results" id="cpResults"></div>
+        <div class="cp-hint">
+            <kbd>↑</kbd> <kbd>↓</kbd> navigate &nbsp;·&nbsp; <kbd>Enter</kbd> select &nbsp;·&nbsp; <kbd>Esc</kbd> close
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SCRIPTS -->
+    <!-- ============================================================ -->
+    <script>
+        // ============================================================
+        // DATA
+        // ============================================================
+        const DATA = {
+            skills: [
+                { name: 'Python', icon: 'fab fa-python', cats: ['Backend', 'Primary'] },
+                { name: 'Django', icon: 'fas fa-globe', cats: ['Backend', 'Web'] },
+                { name: 'Django Template Language', icon: 'fas fa-file-code', cats: ['Backend', 'DTL'] },
+                { name: 'Flask', icon: 'fas fa-flask', cats: ['Backend', 'API'] },
+                { name: 'REST APIs', icon: 'fas fa-cloud', cats: ['Backend', 'API'] },
+                { name: 'Multi-tenant Architecture', icon: 'fas fa-building', cats: ['SaaS', 'Architecture'] },
+                { name: 'AI Agents', icon: 'fas fa-robot', cats: ['AI', 'Integration'] },
+                { name: '.NET/ASP.NET Core', icon: 'fas fa-window-maximize', cats: ['Backend'] },
+                { name: 'NestJS', icon: 'fas fa-server', cats: ['Backend', 'Node.js'] },
+                { name: 'Next.js', icon: 'fab fa-react', cats: ['Frontend', 'React'] },
+                { name: 'PostgreSQL', icon: 'fas fa-database', cats: ['Database', 'SQL'] },
+                { name: 'MongoDB', icon: 'fas fa-database', cats: ['Database', 'NoSQL'] },
+                { name: 'Docker', icon: 'fab fa-docker', cats: ['DevOps', 'Containers'] },
+                { name: 'Linux Administration', icon: 'fab fa-linux', cats: ['DevOps', 'Systems'] },
+                { name: 'React Native', icon: 'fab fa-react', cats: ['Mobile', 'Cross-Platform'] },
+                { name: 'Flutter', icon: 'fab fa-google', cats: ['Mobile', 'Cross-Platform'] },
+                { name: 'OpenCV', icon: 'fas fa-eye', cats: ['AI', 'Computer Vision'] },
+                { name: 'Unity', icon: 'fas fa-cube', cats: ['XR', 'Game Dev'] },
+                { name: 'Data Analysis', icon: 'fas fa-chart-line', cats: ['Data', 'Visualization'] },
+                { name: 'Algorithms', icon: 'fas fa-code-branch', cats: ['Core', 'Problem Solving'] },
+                { name: 'English / Arabic', icon: 'fas fa-language', cats: ['Languages'] },
+            ],
+            experience: [{
                 title: 'Senior Software Engineer',
                 company: 'Rozavio',
                 date: '2026 — Present',
-                desc: 'Lead delivery of a large-scale, multi-tenant clinics management SaaS serving clinics, staff and patients. Build backend services and REST APIs with Django and DTL on PostgreSQL, containerized with Docker. Integrate AI agents for enhanced business insights. Handle a wide range of clients and products in parallel, with a React Native mobile app planned to unite patients, clinics and staff in one ecosystem.',
-                tags: ['Django', 'DTL', 'PostgreSQL', 'REST APIs', 'Docker', 'Multi-Tenancy', 'AI Agents', 'React Native']
+                desc: 'Lead the design and delivery of a large-scale, multi-tenant clinics management SaaS platform serving clinics, staff and patients. Build backend services and REST APIs with Django and Django Template Language (DTL), backed by PostgreSQL and containerized with Docker. Integrate AI agents into the platform to provide enhanced business insights for clinics. Serve a wide range of clients and products, handling multiple projects in parallel and delivering each to production. Plan the upcoming React Native mobile app to unite patients, clinics and staff in a single ecosystem.',
+                tags: ['Django', 'DTL', 'PostgreSQL', 'Docker', 'AI Agents', 'Multi-tenant', 'React Native']
             }, {
                 title: 'Backend Engineer',
                 company: 'Ameritalia Antiques',
                 date: '01/2024 — 2026',
-                desc: 'Designed, developed, and maintained backend services and RESTful APIs supporting business applications. Worked primarily in Python (Flask, Django) with additional exposure to .NET/ASP.NET Core and Node.js. Designed and managed relational and NoSQL data layers using PostgreSQL and MongoDB. Containerized services with Docker.',
-                tags: ['Python', 'Django', 'Flask', 'PostgreSQL', 'MongoDB', 'Docker']
-            }, {"""
-rx(r"(experience: \[\{\s*title: 'Backend Engineer'.*?\}, \{)", exp.replace("\\", "\\\\"), "experience entries")
-
-# --- Projects ---
-proj = """projects: [{
-                title: 'Multi-Tenant Clinics SaaS',
+                desc: 'Designed, developed, and maintained backend services and RESTful APIs supporting business applications. Worked primarily in Python (Flask, Django) to build and integrate application features, with additional exposure to .NET/ASP.NET Core and Node.js (NestJS, Next.js). Designed and managed relational and NoSQL data layers using PostgreSQL and MongoDB. Containerized services with Docker to support consistent deployment across environments. Applied data structures, algorithms, and problem-solving practices to improve service reliability and performance.',
+                tags: ['Python', 'Flask', 'Django', 'PostgreSQL', 'MongoDB', 'Docker', 'NestJS']
+            }, {
+                title: 'System Administrator — Military Service',
+                company: 'Alexandria Recruitment and Mobilization Zone',
+                date: 'Military Service',
+                desc: 'Managed database systems, including software and hardware maintenance. Maintained and administered intranet infrastructure. Developed internal desktop auxiliary applications to support administrative operations.',
+                tags: ['Linux', 'Databases', 'Intranet', 'Desktop Apps']
+            }, {
+                title: 'XR System — Graduation Project',
+                company: 'Alexandria Higher Institute of Engineering and Technology',
+                date: '2023 — 2024',
+                desc: 'Designed and built a custom XR hardware headset using a Raspberry Pi and peripherals, including displays, optical lenses, and an MPU6050 motion sensor (gyroscope/accelerometer). Built a custom Android-based XR operating system from the Android Open Source Project (AOSP). Developed the application layer using the Unity game engine, creating interactive applications for immersive education and entertainment use cases.',
+                tags: ['XR', 'Raspberry Pi', 'MPU6050', 'AOSP', 'Unity', 'C#', 'Hardware']
+            }, {
+                title: 'Software Developer & CS/Math Tutor',
+                company: 'Freelance',
+                date: 'Remote / Online',
+                desc: 'Delivered custom software solutions for clients, covering both web and cross-platform mobile development (Flutter, React Native). Tutored students in Computer Science fundamentals and Mathematics, explaining data structures, algorithms, and problem-solving techniques.',
+                tags: ['Flutter', 'React Native', 'Tutoring', 'Algorithms']
+            }, {
+                title: 'IT Specialist',
+                company: 'PBS',
+                date: 'Alexandria, Egypt',
+                desc: 'Provided technical support and Linux system administration for internal infrastructure. Troubleshot hardware, software, and network issues to minimize downtime. Assisted with configuration and maintenance of IT systems and user accounts.',
+                tags: ['Linux', 'IT Support', 'Networking', 'Hardware']
+            }],
+            projects: [{
+                title: 'Multi-Tenant Clinics Management SaaS',
                 emoji: '🏥',
-                desc: 'Large-scale clinics management platform with AI-agent business insights. A React Native app is planned to bring patients, clinics and staff into one ecosystem.',
-                tags: ['Django', 'DTL', 'PostgreSQL', 'REST APIs', 'Docker', 'AI Agents'],
-                github: 'https://github.com/HassanAli66',
-                demo: 'https://www.linkedin.com/in/hassan-ali-0839b421a/'
-            }, {"""
-rep("projects: [{", proj, "projects data", 1)
+                desc: 'Large-scale, multi-tenant SaaS platform serving clinics, staff and patients. Django + DTL backend with REST APIs, PostgreSQL data layer, Docker deployment, and integrated AI agents delivering enhanced business insights. A React Native mobile app unifying patients, clinics and staff is in planning.',
+                tags: ['Django', 'DTL', 'PostgreSQL', 'Docker', 'AI Agents', 'Multi-tenant', 'React Native']
+            }, {
+                title: 'XR Immersive Education System',
+                emoji: '🥽',
+                desc: 'Custom XR hardware headset built on Raspberry Pi with displays, optical lenses and an MPU6050 motion sensor, running a custom AOSP-based XR operating system with Unity applications for immersive education and entertainment.',
+                tags: ['XR', 'Raspberry Pi', 'AOSP', 'Unity', 'C#', 'Python']
+            }, {
+                title: 'Full-Stack API Platform',
+                emoji: '⚙️',
+                desc: 'RESTful API platform built with Django and Flask, serving business applications with PostgreSQL and MongoDB backends. Containerized with Docker for consistent deployment across environments.',
+                tags: ['Python', 'Django', 'Flask', 'PostgreSQL', 'MongoDB', 'Docker']
+            }, {
+                title: 'Cross-Platform Mobile App',
+                emoji: '📱',
+                desc: 'Mobile application built with Flutter and React Native, delivering a seamless experience across iOS and Android with real-time data synchronization.',
+                tags: ['Flutter', 'React Native', 'Mobile', 'API']
+            }, {
+                title: 'Computer Vision Automation',
+                emoji: '👁️',
+                desc: 'AI-aided automation system using OpenCV for computer vision tasks, enabling intelligent image processing and real-time analysis pipelines.',
+                tags: ['OpenCV', 'Python', 'AI', 'Automation']
+            }],
+            education: [{
+                title: "Bachelor's Degree in Computer Engineering",
+                school: 'Alexandria Higher Institute of Engineering and Technology (AIET)',
+                date: '09/2019 — 09/2024',
+                desc: 'Alexandria, Egypt. Comprehensive computer engineering curriculum with focus on systems, algorithms, and software development.'
+            }, {
+                title: 'Data Science Program',
+                school: 'University of Michigan',
+                date: '12/2022 — 03/2023',
+                desc: 'Applied data science training covering statistical analysis, machine learning, and data visualization.'
+            }],
+            certifications: [
+                'Linux Fundamentals — Simmons University',
+                'Data Science — Ministry of Communication and Information Technology, Egypt',
+                'Web Development — Ministry of Communication and Information Technology, Egypt',
+                'Flutter Development — Udemy'
+            ]
+        };
 
-open(out, "w", encoding="utf-8").write(s)
-print("Wrote", out)
+        // ============================================================
+        // LOADING SCREEN
+        // ============================================================
+        (function boot() {
+            const lines = [
+                'Loading kernel...',
+                'Initializing Python runtime...',
+                'Loading Docker services...',
+                'Connecting PostgreSQL...',
+                'Starting Django server...',
+                'Launching Portfolio...',
+                'Ready.'
+            ];
+            const container = document.getElementById('boot-lines');
+            const progress = document.getElementById('boot-progress');
+            let idx = 0;
+
+            function addLine(text, done = false) {
+                const div = document.createElement('div');
+                div.className = 'boot-line';
+                const prefix = document.createElement('span');
+                prefix.className = 'prefix';
+                prefix.textContent = '>';
+                const txt = document.createElement('span');
+                txt.className = done ? 'success' : 'text';
+                txt.textContent = text;
+                div.appendChild(prefix);
+                div.appendChild(txt);
+                if (done) div.classList.add('done');
+                container.appendChild(div);
+                progress.style.width = Math.min(((idx + 1) / lines.length) * 100, 100) + '%';
+                container.scrollTop = container.scrollHeight;
+            }
+
+            function nextLine() {
+                if (idx < lines.length) {
+                    const done = idx === lines.length - 1;
+                    addLine(lines[idx], done);
+                    idx++;
+                    const delay = idx < lines.length ? 200 + Math.random() * 300 : 500;
+                    setTimeout(nextLine, delay);
+                } else {
+                    setTimeout(() => {
+                        document.getElementById('loader').classList.add('hide');
+                        document.body.style.overflow = '';
+                        initApp();
+                    }, 600);
+                }
+            }
+            document.body.style.overflow = 'hidden';
+            nextLine();
+        })();
+
+        // ============================================================
+        // APP INIT
+        // ============================================================
+        function initApp() {
+            buildSkills();
+            buildExperience();
+            buildProjects();
+            buildEducation();
+            buildCertifications();
+
+            if (typeof Typed !== 'undefined') {
+                new Typed('#typed-text', {
+                    strings: ['Senior Software Engineer', 'Backend Engineer', 'Python Developer',
+                        'AI Agent Integrations', 'Full-Stack Engineer', 'SaaS Architect'
+                    ],
+                    typeSpeed: 60,
+                    backSpeed: 30,
+                    loop: true,
+                    backDelay: 1800,
+                    startDelay: 400,
+                    cursorChar: '▌',
+                });
+            }
+
+            if (typeof Lenis !== 'undefined' && window.innerWidth > 768) {
+                const lenis = new Lenis({
+                    duration: 1.2,
+                    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                    orientation: 'vertical',
+                    smoothWheel: true,
+                });
+                window.lenis = lenis;
+
+                function raf(time) {
+                    lenis.raf(time);
+                    requestAnimationFrame(raf);
+                }
+                requestAnimationFrame(raf);
+            }
+
+            if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+                gsap.registerPlugin(ScrollTrigger);
+                gsap.utils.toArray('[data-section]').forEach((section) => {
+                    gsap.from(section, {
+                        scrollTrigger: {
+                            trigger: section,
+                            start: 'top 88%',
+                            toggleActions: 'play none none reverse',
+                        },
+                        opacity: 0,
+                        y: 40,
+                        duration: 0.7,
+                        ease: 'power3.out',
+                        clearProps: 'opacity,y',
+                    });
+                });
+                gsap.utils.toArray('#timeline .timeline-item').forEach((item, i) => {
+                    gsap.from(item, {
+                        scrollTrigger: {
+                            trigger: item,
+                            start: 'top 92%',
+                            toggleActions: 'play none none reverse',
+                        },
+                        opacity: 0,
+                        x: -24,
+                        duration: 0.5,
+                        delay: i * 0.06,
+                        ease: 'power3.out',
+                        clearProps: 'opacity,x',
+                    });
+                });
+                gsap.utils.toArray('#skills .skill-card').forEach((card, i) => {
+                    gsap.from(card, {
+                        scrollTrigger: {
+                            trigger: card,
+                            start: 'top 94%',
+                            toggleActions: 'play none none reverse',
+                        },
+                        opacity: 0,
+                        scale: 0.94,
+                        duration: 0.35,
+                        delay: i * 0.025,
+                        ease: 'power2.out',
+                        clearProps: 'opacity,scale',
+                    });
+                });
+                gsap.utils.toArray('#projects .project-card').forEach((card, i) => {
+                    gsap.from(card, {
+                        scrollTrigger: {
+                            trigger: card,
+                            start: 'top 94%',
+                            toggleActions: 'play none none reverse',
+                        },
+                        opacity: 0,
+                        y: 24,
+                        duration: 0.45,
+                        delay: i * 0.05,
+                        ease: 'power3.out',
+                        clearProps: 'opacity,y',
+                    });
+                });
+            }
+
+            // Navbar hide/show
+            let lastScroll = 0;
+            const navbar = document.getElementById('navbar');
+            let ticking = false;
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        const current = window.pageYOffset || document.documentElement.scrollTop;
+                        if (current > 60) {
+                            if (current > lastScroll && current > 100) {
+                                navbar.classList.add('hidden');
+                            } else {
+                                navbar.classList.remove('hidden');
+                            }
+                        } else {
+                            navbar.classList.remove('hidden');
+                        }
+                        lastScroll = current;
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+
+            // Spotlight
+            document.addEventListener('mousemove', (e) => {
+                const spotlight = document.getElementById('spotlight');
+                if (spotlight) {
+                    spotlight.style.backgroundPosition = `${e.clientX}px ${e.clientY}px`;
+                }
+            });
+
+            // Menu toggle
+            const menuToggle = document.getElementById('menuToggle');
+            const navLinks = document.getElementById('navLinks');
+            menuToggle.addEventListener('click', () => {
+                menuToggle.classList.toggle('active');
+                navLinks.classList.toggle('open');
+                menuToggle.setAttribute('aria-expanded', navLinks.classList.contains('open'));
+            });
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    menuToggle.classList.remove('active');
+                    navLinks.classList.remove('open');
+                    menuToggle.setAttribute('aria-expanded', 'false');
+                });
+            });
+
+            // CV download
+            document.querySelectorAll('[id^="cvDownloadBtn"]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    generateCV();
+                });
+            });
+
+            // Terminal triggers
+            const termTriggers = [
+                'navTermBtn', 'heroTermBtn', 'footerTermBtn', 'shortcutTerminal'
+            ];
+            termTriggers.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        toggleTerminal();
+                    });
+                }
+            });
+
+            // Matrix triggers
+            const matrixTriggers = [
+                'navMatrixBtn', 'heroMatrixBtn', 'footerMatrixBtn', 'shortcutMatrix'
+            ];
+            matrixTriggers.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        toggleMatrix();
+                    });
+                }
+            });
+
+            // Palette shortcut
+            document.getElementById('shortcutPalette').addEventListener('click', (e) => {
+                e.preventDefault();
+                openPalette();
+            });
+
+            // Konami shortcut
+            document.getElementById('shortcutKonami').addEventListener('click', (e) => {
+                e.preventDefault();
+                triggerKonami();
+            });
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                // T for terminal
+                if ((e.key === 't' || e.key === 'T') && !e.ctrlKey && !e.metaKey && !e.shiftKey && !e.altKey) {
+                    const tag = document.activeElement?.tagName || '';
+                    if (tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT') {
+                        e.preventDefault();
+                        toggleTerminal();
+                    }
+                }
+                // M for matrix
+                if ((e.key === 'm' || e.key === 'M') && !e.ctrlKey && !e.metaKey && !e.shiftKey && !e.altKey) {
+                    const tag = document.activeElement?.tagName || '';
+                    if (tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT') {
+                        e.preventDefault();
+                        toggleMatrix();
+                    }
+                }
+                // Ctrl+K or Cmd+K for palette
+                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                    e.preventDefault();
+                    const palette = document.getElementById('cmd-palette');
+                    if (palette.classList.contains('open')) {
+                        closePalette();
+                    } else {
+                        openPalette();
+                    }
+                }
+            });
+
+            setupTerminal();
+            setupCommandPalette();
+            setupCursor();
+            setupBackground();
+            setupEasterEggs();
+            setupMatrix();
+
+            console.log('🚀 Portfolio ready.');
+            console.log('🎮 Shortcuts: [T]erminal  [M]atrix  [⌘K] Palette');
+            console.log('🎮 Konami code: ↑↑↓↓←→←→BA');
+        }
+
+        // ============================================================
+        // BUILD FUNCTIONS
+        // ============================================================
+        function buildSkills() {
+            const grid = document.getElementById('skillsGrid');
+            const iconMap = {
+                'Python': 'fab fa-python',
+                'Django': 'fas fa-globe',
+                'Django Template Language': 'fas fa-file-code',
+                'Flask': 'fas fa-flask',
+                'REST APIs': 'fas fa-cloud',
+                'Multi-tenant Architecture': 'fas fa-building',
+                'AI Agents': 'fas fa-robot',
+                '.NET/ASP.NET Core': 'fas fa-window-maximize',
+                'NestJS': 'fas fa-server',
+                'Next.js': 'fab fa-react',
+                'PostgreSQL': 'fas fa-database',
+                'MongoDB': 'fas fa-database',
+                'Docker': 'fab fa-docker',
+                'Linux Administration': 'fab fa-linux',
+                'React Native': 'fab fa-react',
+                'Flutter': 'fab fa-google',
+                'OpenCV': 'fas fa-eye',
+                'Unity': 'fas fa-cube',
+                'Data Analysis': 'fas fa-chart-line',
+                'Algorithms': 'fas fa-code-branch',
+                'English / Arabic': 'fas fa-language',
+            };
+            DATA.skills.forEach(s => {
+                const card = document.createElement('div');
+                card.className = 'skill-card';
+                const icon = iconMap[s.name] || s.icon || 'fas fa-code';
+                card.innerHTML = `
+                    <span class="icon"><i class="${icon}"></i></span>
+                    <div class="name">${s.name}</div>
+                    <div class="cats">${s.cats.map(c => `<span>${c}</span>`).join('')}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function buildExperience() {
+            const timeline = document.getElementById('timeline');
+            DATA.experience.forEach(exp => {
+                const item = document.createElement('div');
+                item.className = 'timeline-item';
+                item.innerHTML = `
+                    <div class="header">
+                        <span class="title">${exp.title}</span>
+                        <span class="company">${exp.company}</span>
+                        <span class="date">${exp.date}</span>
+                    </div>
+                    <div class="desc">${exp.desc}</div>
+                    <div class="tech-tags">${exp.tags.map(t => `<span>${t}</span>`).join('')}</div>
+                `;
+                timeline.appendChild(item);
+            });
+        }
+
+        function buildProjects() {
+            const grid = document.getElementById('projectsGrid');
+            DATA.projects.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'project-card';
+                card.innerHTML = `
+                    <span class="emoji">${p.emoji}</span>
+                    <div class="p-title">${p.title}</div>
+                    <div class="p-desc">${p.desc}</div>
+                    <div class="p-tags">${p.tags.map(t => `<span>${t}</span>`).join('')}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function buildEducation() {
+            const grid = document.getElementById('eduGrid');
+            DATA.education.forEach(e => {
+                const card = document.createElement('div');
+                card.className = 'edu-card';
+                card.innerHTML = `
+                    <div class="e-title">${e.title}</div>
+                    <div class="e-school">${e.school}</div>
+                    <div class="e-date">${e.date}</div>
+                    <div class="e-desc">${e.desc}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function buildCertifications() {
+            const grid = document.getElementById('certGrid');
+            DATA.certifications.forEach(c => {
+                const item = document.createElement('div');
+                item.className = 'cert-item';
+                item.innerHTML = `<span class="ci"><i class="fas fa-check-circle"></i></span> ${c}`;
+                grid.appendChild(item);
+            });
+        }
+
+        // ============================================================
+        // CV GENERATOR
+        // ============================================================
+        function generateCV() {
+            const win = window.open('', '_blank', 'width=800,height=900,scrollbars=yes');
+            if (!win) {
+                alert('Please allow popups to download the CV.');
+                return;
+            }
+            const now = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+            win.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head><title>Hassan Ali — CV</title>
+                <style>
+                    body { font-family: 'Inter', -apple-system, sans-serif; max-width: 800px; margin: 2rem auto; padding: 2rem; color: #1a1a2e; background: #fff; line-height: 1.6; }
+                    h1 { font-family: 'Space Grotesk', sans-serif; font-size: 2.2rem; margin-bottom: 0.2rem; letter-spacing: -0.02em; }
+                    .subhead { font-size: 1rem; color: #4a4a6a; margin-bottom: 1.5rem; border-bottom: 2px solid #3B82F6; padding-bottom: 0.5rem; }
+                    .contact-row { display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; font-size: 0.85rem; color: #4a4a6a; margin-bottom: 1.5rem; }
+                    .contact-row a { color: #3B82F6; text-decoration: none; }
+                    h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1.3rem; margin-top: 1.5rem; margin-bottom: 0.5rem; color: #0B1120; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.3rem; }
+                    .item { margin-bottom: 1rem; }
+                    .item .title { font-weight: 600; font-size: 1rem; }
+                    .item .meta { font-size: 0.8rem; color: #4a4a6a; }
+                    .item .desc { font-size: 0.9rem; margin-top: 0.2rem; }
+                    .tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.3rem; }
+                    .tags span { background: #f1f5f9; padding: 0.1rem 0.6rem; border-radius: 12px; font-size: 0.65rem; color: #0B1120; }
+                    .skills-grid { display: flex; flex-wrap: wrap; gap: 0.3rem 0.6rem; margin: 0.5rem 0; }
+                    .skills-grid span { background: #f1f5f9; padding: 0.15rem 0.7rem; border-radius: 12px; font-size: 0.75rem; }
+                    .footer { margin-top: 2rem; font-size: 0.7rem; color: #94A3B8; border-top: 1px solid #e2e8f0; padding-top: 0.5rem; text-align: center; }
+                    @media print { body { margin: 0.5in; } .no-print { display: none; } }
+                </style>
+                </head>
+                <body>
+                    <h1>Hassan Ali</h1>
+                    <div class="subhead">Senior Software Engineer · Python · Django · Flask</div>
+                    <div class="contact-row">
+                        <span>📧 hassanalihassan10101@gmail.com</span>
+                        <span>📱 +20 120 081 6047</span>
+                        <span>📍 Alexandria, Egypt</span>
+                        <span><a href="https://github.com/HassanAli66" target="_blank">GitHub: HassanAli66</a></span>
+                        <span><a href="https://www.linkedin.com/in/hassan-ali-0839b421a/" target="_blank">LinkedIn</a></span>
+                    </div>
+
+                    <h2>Professional Summary</h2>
+                    <p>Senior Software Engineer with hands-on experience building, scaling and maintaining web APIs and full-stack applications, primarily in Python (Django, Flask), with additional exposure to .NET/ASP.NET Core and Node.js (NestJS, Next.js). Currently delivering a large-scale, multi-tenant clinics management SaaS with integrated AI agents, while handling multiple clients and products in parallel. Comfortable across the stack, from relational and NoSQL database design (PostgreSQL, MongoDB) to containerized deployments with Docker and Linux administration. Background also spans systems administration (military service), a self-directed Extended Reality (XR) hardware/software project, cross-platform mobile development (Flutter, React Native), computer vision/automation with OpenCV, and data analysis. Strong problem-solving foundation backed by a Computer Engineering degree and applied data science training.</p>
+
+                    <h2>Technical Skills</h2>
+                    <div class="skills-grid">
+                        <span>Python (Django, DTL, Flask)</span>
+                        <span>REST APIs</span>
+                        <span>Multi-tenant Architecture</span>
+                        <span>AI Agents</span>
+                        <span>.NET/ASP.NET Core</span>
+                        <span>NestJS</span>
+                        <span>Next.js</span>
+                        <span>React Native</span>
+                        <span>Flutter</span>
+                        <span>PostgreSQL</span>
+                        <span>MongoDB</span>
+                        <span>Docker</span>
+                        <span>Linux Administration</span>
+                        <span>OpenCV</span>
+                        <span>Unity</span>
+                        <span>Data Analysis</span>
+                        <span>Algorithms</span>
+                        <span>English / Arabic</span>
+                    </div>
+
+                    <h2>Professional Experience</h2>
+                    ${DATA.experience.map(exp => `
+                        <div class="item">
+                            <div class="title">${exp.title} — ${exp.company}</div>
+                            <div class="meta">${exp.date} · Alexandria, Egypt</div>
+                            <div class="desc">${exp.desc}</div>
+                            <div class="tags">${exp.tags.map(t => `<span>${t}</span>`).join('')}</div>
+                        </div>
+                    `).join('')}
+
+                    <h2>Projects</h2>
+                    ${DATA.projects.map(p => `
+                        <div class="item">
+                            <div class="title">${p.emoji} ${p.title}</div>
+                            <div class="desc">${p.desc}</div>
+                            <div class="tags">${p.tags.map(t => `<span>${t}</span>`).join('')}</div>
+                        </div>
+                    `).join('')}
+
+                    <h2>Education</h2>
+                    ${DATA.education.map(e => `
+                        <div class="item">
+                            <div class="title">${e.title}</div>
+                            <div class="meta">${e.school} · ${e.date}</div>
+                            <div class="desc">${e.desc}</div>
+                        </div>
+                    `).join('')}
+
+                    <h2>Certifications &amp; Courses</h2>
+                    <ul style="list-style:none;padding:0;">
+                        ${DATA.certifications.map(c => `<li style="padding:0.1rem 0;">• ${c}</li>`).join('')}
+                    </ul>
+
+                    <div class="footer">Generated on ${now} · Hassan Ali · Senior Software Engineer</div>
+                    <div class="no-print" style="margin-top:1rem;text-align:center;">
+                        <button onclick="window.print()" style="padding:0.5rem 2rem;background:#3B82F6;color:#fff;border:none;border-radius:8px;font-size:0.9rem;cursor:pointer;">📄 Print / Save as PDF</button>
+                        <button onclick="window.close()" style="padding:0.5rem 2rem;background:#e2e8f0;color:#1a1a2e;border:none;border-radius:8px;font-size:0.9rem;cursor:pointer;margin-left:0.5rem;">Close</button>
+                    </div>
+                </body>
+                </html>
+            `);
+            win.document.close();
+        }
+
+        // ============================================================
+        // CUSTOM CURSOR
+        // ============================================================
+        function setupCursor() {
+            if (window.matchMedia('(max-width: 768px)').matches) return;
+            const dot = document.getElementById('cursorDot');
+            const ring = document.getElementById('cursorRing');
+            let mouseX = 0,
+                mouseY = 0;
+            let ringX = 0,
+                ringY = 0;
+
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                dot.style.transform = `translate(${mouseX - 4}px, ${mouseY - 4}px)`;
+            });
+
+            function lerpRing() {
+                ringX += (mouseX - ringX) * 0.12;
+                ringY += (mouseY - ringY) * 0.12;
+                ring.style.transform = `translate(${ringX - 20}px, ${ringY - 20}px)`;
+                requestAnimationFrame(lerpRing);
+            }
+            ringX = mouseX;
+            ringY = mouseY;
+            lerpRing();
+
+            const hoverTargets = document.querySelectorAll('a, button, .btn, .skill-card, .project-card, .stat-card, .contact-item, .edu-card, .cert-item');
+            hoverTargets.forEach(el => {
+                el.addEventListener('mouseenter', () => ring.classList.add('active'));
+                el.addEventListener('mouseleave', () => ring.classList.remove('active'));
+                el.addEventListener('mousedown', () => {
+                    ring.classList.add('click');
+                    setTimeout(() => ring.classList.remove('click'), 200);
+                });
+            });
+        }
+
+        // ============================================================
+        // BACKGROUND PARTICLES
+        // ============================================================
+        function setupBackground() {
+            const canvas = document.getElementById('bg-canvas');
+            const ctx = canvas.getContext('2d');
+            let w, h;
+            const particles = [];
+            let count = 50;
+            let animId;
+
+            function resize() {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
+                count = Math.min(60, Math.max(25, Math.floor((w * h) / 20000)));
+                while (particles.length > count) particles.pop();
+                while (particles.length < count) {
+                    particles.push(new Particle());
+                }
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * w;
+                    this.y = Math.random() * h;
+                    this.r = Math.random() * 1.5 + 0.5;
+                    this.dx = (Math.random() - 0.5) * 0.3;
+                    this.dy = (Math.random() - 0.5) * 0.3;
+                    this.opacity = Math.random() * 0.4 + 0.1;
+                }
+                update() {
+                    this.x += this.dx;
+                    this.y += this.dy;
+                    if (this.x < 0 || this.x > w) this.dx *= -1;
+                    if (this.y < 0 || this.y > h) this.dy *= -1;
+                }
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255,255,255,${this.opacity})`;
+                    ctx.fill();
+                }
+            }
+
+            for (let i = 0; i < count; i++) {
+                particles.push(new Particle());
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, w, h);
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+                const maxDist = Math.min(150, (w + h) / 10);
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < maxDist) {
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.strokeStyle = `rgba(255,255,255,${0.025 * (1 - dist / maxDist)})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.stroke();
+                        }
+                    }
+                }
+                animId = requestAnimationFrame(animate);
+            }
+            animate();
+
+            window.addEventListener('resize', () => {
+                if (animId) cancelAnimationFrame(animId);
+                resize();
+                animate();
+            });
+        }
+
+        // ============================================================
+        // TERMINAL
+        // ============================================================
+        let terminalOpen = false;
+
+        function setupTerminal() {
+            const overlay = document.getElementById('terminal-overlay');
+            const input = document.getElementById('termInput');
+            const body = document.getElementById('termBody');
+            const closeBtn = document.getElementById('termClose');
+            let history = [];
+            let histIdx = 0;
+            let matrixMode = false;
+
+            function printLine(text, cls = '') {
+                const div = document.createElement('div');
+                div.className = `line ${cls}`;
+                div.innerHTML = text;
+                body.appendChild(div);
+                body.scrollTop = body.scrollHeight;
+            }
+
+            function handleCommand(cmd) {
+                const parts = cmd.trim().split(' ');
+                const main = parts[0].toLowerCase();
+                let output = '';
+
+                switch (main) {
+                    case 'help':
+                        output =
+                            `<span style="color:#64748B;">Available commands:</span><br>
+                        <span style="color:#3B82F6;">whoami</span>  — show profile<br>
+                        <span style="color:#3B82F6;">skills</span>   — list technical skills<br>
+                        <span style="color:#3B82F6;">projects</span> — show projects<br>
+                        <span style="color:#3B82F6;">experience</span> — work history<br>
+                        <span style="color:#3B82F6;">education</span> — education &amp; certs<br>
+                        <span style="color:#8B5CF6;">matrix</span>   — toggle Matrix mode<br>
+                        <span style="color:#8B5CF6;">konami</span>   — trigger Konami easter egg<br>
+                        <span style="color:#3B82F6;">clear</span>    — clear terminal<br>
+                        <span style="color:#3B82F6;">exit</span>     — close terminal`;
+                        break;
+                    case 'whoami':
+                        output =
+                            `Hassan Ali — Senior Software Engineer<br>Alexandria, Egypt<br>Python · Django · Flask · PostgreSQL · Docker · AI Agents<br>hassanalihassan10101@gmail.com<br>GitHub: HassanAli66`;
+                        break;
+                    case 'skills':
+                        output = DATA.skills.map(s => `• ${s.name} — ${s.cats.join(', ')}`).join('<br>');
+                        break;
+                    case 'projects':
+                        output = DATA.projects.map(p => `• ${p.emoji} ${p.title}: ${p.desc}`).join('<br>');
+                        break;
+                    case 'experience':
+                        output = DATA.experience.map(e =>
+                            `• ${e.title} @ ${e.company} (${e.date}) — ${e.desc.substring(0, 80)}...`
+                        ).join('<br>');
+                        break;
+                    case 'education':
+                        output = DATA.education.map(e => `• ${e.title} — ${e.school}`).join('<br>');
+                        output += '<br><br><span style="color:#64748B;">Certifications:</span><br>';
+                        output += DATA.certifications.map(c => `• ${c}`).join('<br>');
+                        break;
+                    case 'matrix':
+                        matrixMode = !matrixMode;
+                        toggleMatrix();
+                        output =
+                            `<span class="success">${matrixMode ? '🌀 Matrix mode engaged!' : '🌀 Matrix mode disengaged.'}</span>`;
+                        break;
+                    case 'konami':
+                        triggerKonami();
+                        output = `<span class="success">🎮 Konami code activated! Matrix mode toggled.</span>`;
+                        break;
+                    case 'clear':
+                        body.innerHTML =
+                            `<div class="line"><span style="color:#64748B;">── Terminal cleared ──</span></div>`;
+                        return;
+                    case 'exit':
+                        toggleTerminal();
+                        return;
+                    default:
+                        output =
+                            `<span class="error">Command not found: ${cmd}</span><br><span style="color:#64748B;">Type <span style="color:#3B82F6;">help</span> for available commands</span>`;
+                }
+                printLine(output);
+            }
+
+            function processInput() {
+                const val = input.value.trim();
+                if (!val) return;
+                history.push(val);
+                histIdx = history.length;
+                printLine(`<span class="prompt">$</span> <span class="cmd">${val}</span>`);
+                handleCommand(val);
+                input.value = '';
+            }
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    processInput();
+                }
+                if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    if (histIdx > 0) {
+                        histIdx--;
+                        input.value = history[histIdx] || '';
+                    }
+                }
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    if (histIdx < history.length - 1) {
+                        histIdx++;
+                        input.value = history[histIdx] || '';
+                    } else {
+                        histIdx = history.length;
+                        input.value = '';
+                    }
+                }
+                if (e.key === 'Escape') {
+                    toggleTerminal();
+                }
+            });
+
+            closeBtn.addEventListener('click', toggleTerminal);
+
+            window._terminalToggle = toggleTerminal;
+        }
+
+        function toggleTerminal() {
+            const overlay = document.getElementById('terminal-overlay');
+            const input = document.getElementById('termInput');
+            const isOpen = overlay.classList.contains('open');
+            if (isOpen) {
+                overlay.classList.remove('open');
+                overlay.style.display = 'none';
+                document.body.style.overflow = '';
+                terminalOpen = false;
+            } else {
+                overlay.style.display = 'flex';
+                void overlay.offsetWidth;
+                overlay.classList.add('open');
+                document.body.style.overflow = 'hidden';
+                terminalOpen = true;
+                setTimeout(() => input.focus(), 100);
+            }
+        }
+
+        // ============================================================
+        // MATRIX MODE
+        // ============================================================
+        let matrixActive = false;
+        let matrixAnimId = null;
+        let matrixDrops = [];
+        let matrixCols = 0;
+        let matrixCtx = null;
+        let matrixW = 0,
+            matrixH = 0;
+
+        function setupMatrix() {
+            const canvas = document.getElementById('matrix-canvas');
+            matrixCtx = canvas.getContext('2d');
+
+            function resize() {
+                matrixW = canvas.width = window.innerWidth;
+                matrixH = canvas.height = window.innerHeight;
+                matrixCols = Math.floor(matrixW / 14);
+                if (matrixActive) {
+                    matrixDrops = [];
+                    for (let i = 0; i < matrixCols; i++) {
+                        matrixDrops[i] = Math.random() * -matrixH / 14;
+                    }
+                }
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            function drawMatrix() {
+                if (!matrixActive || !matrixCtx) {
+                    if (matrixCtx) matrixCtx.clearRect(0, 0, matrixW, matrixH);
+                    return;
+                }
+                matrixCtx.fillStyle = 'rgba(5,8,22,0.05)';
+                matrixCtx.fillRect(0, 0, matrixW, matrixH);
+                matrixCtx.font = '14px monospace';
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()';
+                for (let i = 0; i < matrixDrops.length; i++) {
+                    const text = chars[Math.floor(Math.random() * chars.length)];
+                    matrixCtx.fillStyle = Math.random() > 0.9 ? '#3B82F6' : '#06B6D4';
+                    matrixCtx.fillText(text, i * 14, matrixDrops[i] * 14);
+                    if (matrixDrops[i] * 14 > matrixH && Math.random() > 0.975) {
+                        matrixDrops[i] = 0;
+                    }
+                    matrixDrops[i]++;
+                }
+                matrixAnimId = requestAnimationFrame(drawMatrix);
+            }
+
+            window._matrixDraw = drawMatrix;
+            window._matrixResize = resize;
+        }
+
+        function toggleMatrix() {
+            const canvas = document.getElementById('matrix-canvas');
+            matrixActive = !matrixActive;
+            if (matrixActive) {
+                canvas.classList.add('active');
+                const w = canvas.width,
+                    h = canvas.height;
+                matrixCols = Math.floor(w / 14);
+                matrixDrops = [];
+                for (let i = 0; i < matrixCols; i++) {
+                    matrixDrops[i] = Math.random() * -h / 14;
+                }
+                if (matrixAnimId) cancelAnimationFrame(matrixAnimId);
+                window._matrixDraw();
+                document.getElementById('shortcutMatrix').classList.add('matrix-active');
+            } else {
+                canvas.classList.remove('active');
+                if (matrixAnimId) cancelAnimationFrame(matrixAnimId);
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                document.getElementById('shortcutMatrix').classList.remove('matrix-active');
+            }
+            // Update matrix button text
+            document.querySelectorAll('.btn-matrix, .matrix-btn').forEach(el => {
+                if (matrixActive) {
+                    if (el.tagName === 'BUTTON') {
+                        el.innerHTML = '<i class="fas fa-cube icon"></i> Matrix ✕';
+                    } else {
+                        el.innerHTML = '<i class="fas fa-cube"></i> ✕';
+                    }
+                } else {
+                    if (el.tagName === 'BUTTON') {
+                        el.innerHTML = '<i class="fas fa-cube icon"></i> Matrix';
+                    } else {
+                        el.innerHTML = '<i class="fas fa-cube"></i>';
+                    }
+                }
+            });
+        }
+
+        // ============================================================
+        // COMMAND PALETTE
+        // ============================================================
+        function setupCommandPalette() {
+            const palette = document.getElementById('cmd-palette');
+            const bg = document.getElementById('palette-overlay-bg');
+            const input = document.getElementById('cpInput');
+            const results = document.getElementById('cpResults');
+
+            const sections = [
+                { name: 'Home', id: 'hero', icon: 'fa-home' },
+                { name: 'About', id: 'about', icon: 'fa-user' },
+                { name: 'Skills', id: 'skills', icon: 'fa-code' },
+                { name: 'Experience', id: 'experience', icon: 'fa-briefcase' },
+                { name: 'Projects', id: 'projects', icon: 'fa-folder-open' },
+                { name: 'Education', id: 'education', icon: 'fa-graduation-cap' },
+                { name: 'Contact', id: 'contact', icon: 'fa-envelope' },
+                { name: 'Terminal', id: 'terminal', icon: 'fa-terminal' },
+                { name: 'Matrix', id: 'matrix', icon: 'fa-cube' },
+            ];
+
+            let activeIdx = -1;
+            let filtered = sections;
+
+            function render(items) {
+                results.innerHTML = '';
+                items.forEach((item, i) => {
+                    const div = document.createElement('div');
+                    div.className = `cp-item${i === activeIdx ? ' active' : ''}`;
+                    div.innerHTML =
+                        `<span class="cp-icon"><i class="fas ${item.icon}"></i></span> ${item.name}`;
+                    div.dataset.id = item.id;
+                    div.dataset.index = i;
+                    div.addEventListener('click', () => selectItem(item));
+                    div.addEventListener('mouseenter', () => {
+                        activeIdx = i;
+                        render(filtered);
+                    });
+                    results.appendChild(div);
+                });
+                if (items.length === 0) {
+                    const div = document.createElement('div');
+                    div.className = 'cp-item';
+                    div.style.color = '#64748B';
+                    div.textContent = 'No results found';
+                    results.appendChild(div);
+                }
+            }
+
+            function selectItem(item) {
+                closePalette();
+                if (item.id === 'terminal') {
+                    toggleTerminal();
+                    return;
+                }
+                if (item.id === 'matrix') {
+                    toggleMatrix();
+                    return;
+                }
+                const el = document.getElementById(item.id);
+                if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+
+            function filterItems(query) {
+                const q = query.toLowerCase().trim();
+                if (!q) {
+                    filtered = sections;
+                } else {
+                    filtered = sections.filter(s =>
+                        s.name.toLowerCase().includes(q) ||
+                        s.id.toLowerCase().includes(q)
+                    );
+                }
+                activeIdx = filtered.length > 0 ? 0 : -1;
+                render(filtered);
+            }
+
+            function openPalette() {
+                palette.classList.add('open');
+                bg.classList.add('open');
+                document.body.style.overflow = 'hidden';
+                filtered = sections;
+                activeIdx = 0;
+                render(filtered);
+                setTimeout(() => input.focus(), 50);
+                input.value = '';
+            }
+
+            function closePalette() {
+                palette.classList.remove('open');
+                bg.classList.remove('open');
+                document.body.style.overflow = '';
+                input.blur();
+            }
+
+            input.addEventListener('input', () => filterItems(input.value));
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    e.preventDefault();
+                    closePalette();
+                    return;
+                }
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (activeIdx >= 0 && activeIdx < filtered.length) {
+                        selectItem(filtered[activeIdx]);
+                    }
+                    return;
+                }
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    if (filtered.length > 0) {
+                        activeIdx = (activeIdx + 1) % filtered.length;
+                        render(filtered);
+                        const items = results.querySelectorAll('.cp-item');
+                        if (items[activeIdx]) items[activeIdx].scrollIntoView({ block: 'nearest' });
+                    }
+                }
+                if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    if (filtered.length > 0) {
+                        activeIdx = (activeIdx - 1 + filtered.length) % filtered.length;
+                        render(filtered);
+                        const items = results.querySelectorAll('.cp-item');
+                        if (items[activeIdx]) items[activeIdx].scrollIntoView({ block: 'nearest' });
+                    }
+                }
+            });
+
+            bg.addEventListener('click', closePalette);
+
+            window._openPalette = openPalette;
+            window._closePalette = closePalette;
+        }
+
+        function openPalette() {
+            if (typeof window._openPalette === 'function') window._openPalette();
+        }
+
+        function closePalette() {
+            if (typeof window._closePalette === 'function') window._closePalette();
+        }
+
+        // ============================================================
+        // EASTER EGGS
+        // ============================================================
+        function setupEasterEggs() {
+            const logo = document.querySelector('.logo');
+            let clickCount = 0;
+            logo.addEventListener('click', () => {
+                clickCount++;
+                if (clickCount === 5) {
+                    clickCount = 0;
+                    showToast('🎯 Hidden gem unlocked!', 'You found the engineer\'s secret.');
+                    setTimeout(() => toggleMatrix(), 600);
+                }
+            });
+
+            const konami = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft',
+                'ArrowRight', 'b', 'a'
+            ];
+            let konamiIdx = 0;
+            document.addEventListener('keydown', (e) => {
+                const key = e.key;
+                if (key === konami[konamiIdx] || (key === 'b' && konami[konamiIdx] === 'b') || (key === 'a' &&
+                        konami[konamiIdx] === 'a')) {
+                    konamiIdx++;
+                    if (konamiIdx === konami.length) {
+                        konamiIdx = 0;
+                        triggerKonami();
+                    }
+                } else {
+                    konamiIdx = 0;
+                }
+            });
+        }
+
+        function triggerKonami() {
+            showToast('🎮 KONAMI CODE!', 'Matrix mode activated — enjoy the show!');
+            if (!matrixActive) {
+                toggleMatrix();
+            } else {
+                const canvas = document.getElementById('matrix-canvas');
+                canvas.style.transition = 'opacity 0.1s';
+                canvas.style.opacity = '0.3';
+                setTimeout(() => { canvas.style.opacity = '1'; }, 200);
+                setTimeout(() => { canvas.style.opacity = '0.5'; }, 400);
+                setTimeout(() => { canvas.style.opacity = '1'; }, 600);
+            }
+        }
+
+        function showToast(title, sub = '') {
+            const toast = document.getElementById('konamiToast');
+            toast.innerHTML = `${title}<br><span class="sub">${sub}</span>`;
+            toast.classList.add('show');
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        }
+
+        // ============================================================
+        // HANDLE RESIZE
+        // ============================================================
+        window.addEventListener('resize', () => {
+            const canvas = document.getElementById('bg-canvas');
+            if (canvas) {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            if (typeof window._matrixResize === 'function') {
+                window._matrixResize();
+            }
+        });
+
+        console.log('⚡ Hassan Ali — Senior Software Engineer Portfolio v2.0');
+        console.log('🎮 Shortcuts: [T]erminal  [M]atrix  [⌘K] Palette  [↑↑↓↓←→←→BA] Konami');
+        console.log('🔗 GitHub: HassanAli66  |  LinkedIn: hassan-ali-0839b421a');
+    </script>
+</body>
+</html>
